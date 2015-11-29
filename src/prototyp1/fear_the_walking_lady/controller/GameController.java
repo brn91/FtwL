@@ -10,23 +10,66 @@ public class GameController {
 	Spieler spieler2;
 	int zeit;
 	
-	boolean createInterface(){
-
+	/**
+	 * Erzeugt einen GameController, der das Spiel verwaltet
+	 */
+	public GameController(){
+		myInterface = new TextInterface();
 	}
 	
-	void runStartMenue(){
+//	public boolean createInterface(){
+//		myInterface = new TextInterface();	
+//	}
+	
+	/**
+	 * Gibt das Startmenü aus und verarbeitet die Eingabe
+	 */
+	public void runStartMenue(){
+		int eingabe;		
+		
+		do{
+			eingabe = myInterface.createAndPrintStartMenue();
+			
+			switch(eingabe){
+				case 1:		//Spielregeln (In einer Funktion + Internetlink?)
+							break;
+				case 2: 	runGameHvsH();
+							break;
+				case 3: 	runGameHvsC();
+							break;
+				case 4: 	System.out.println("Das Spiel wird beendet!");
+							break;
+				default:	System.out.println("Ungültige Eingabe!");
+							break;
+			}
+		}while(eingabe != 4);
+	}
+	
+	public void askTimeLimit(){
 		
 	}
 	
-	void askTimeLimit(){
+	/**
+	 * Startet und verwaltet ein Spiel Mensch gegen Mensch
+	 */
+	public void runGameHvsH(){
+		zeit = myInterface.createWindowAskTime();
+		myInterface.createWindowAskWhoStarts();
 		
 	}
 	
-	void runGameHvsH(Field field){
+	/**
+	 * Startet und verwaltet ein Spiel Mensch gegen Computer
+	 */
+	public void runGameHvsC(){
 		
 	}
 	
-	void runGameHvsC(Field field){
-		
+	public boolean ueberpruefeObSteinZuDame(){
+		return false;
+	}
+	
+	public boolean ueberpruefeSpielzeug(){
+		return false;
 	}
 }

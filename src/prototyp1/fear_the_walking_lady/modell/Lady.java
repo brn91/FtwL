@@ -1,14 +1,16 @@
 package prototyp1.fear_the_walking_lady.modell;
 
 public class Lady extends Stone{
-	String mitgliedsName;
 	
-	void ziehen(Koordinate x, Koordinate y, Koordinate neuX, Koordinate neuY){
+	Lady(String color, Koordinate koordinate){
+		super(color, koordinate);
+	}
+	
+	void ziehen(Koordinate bewegungskoordinate){
 		
 	}
 	
-	//Überflüssig?, Lady schlägt wie Stone
-	void schlagen(Stone sOpp){
+	void schlagen(Stone stoneGegner){
 		
 	}
 }

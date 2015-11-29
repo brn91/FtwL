@@ -2,15 +2,18 @@ package prototyp1.fear_the_walking_lady.modell;
 
 public class Stone {
 	String color;
-	//Vielleicht typ Koordinate statt int?
-	int positionX;
-	int positionY;
+	Koordinate koordinate;
 	
-	void ziehen(Koordinate x, Koordinate y, Koordinate neuX, Koordinate neuY){
+	//Konstruktor
+	Stone(String color, Koordinate koordinate){
 		
 	}
 	
-	void schlagen(Stone sOpp){
+	void ziehen(Koordinate Bewegungskoordinate){
+		
+	}
+	
+	void schlagen(Stone stoneGegner){
 		
 	}
 }
