@@ -1,19 +1,28 @@
 package prototyp1.fear_the_walking_lady.modell;
 
 public class Stone {
-	String color;
-	Koordinate koordinate;
+	private String color;
+	private Koordinate koordinate;
 	
 	//Konstruktor
-	Stone(String color, Koordinate koordinate){
+	public Stone(String color, Koordinate koordinate){
+		this.koordinate = koordinate;
+		this.color = color;
+	}
+	
+	public String getColor(){
+		return this.color;
+	}
+	
+	public Koordinate getKoordinate(){
+		return this.koordinate;
+	}
+	
+	public void ziehen(Koordinate Bewegungskoordinate){
 		
 	}
 	
-	void ziehen(Koordinate Bewegungskoordinate){
-		
-	}
-	
-	void schlagen(Stone stoneGegner){
+	public void schlagen(Stone stoneGegner){
 		
 	}
 }

@@ -1,9 +1,70 @@
 package prototyp1.fear_the_walking_lady.modell;
 
+import java.util.LinkedList;
+
 public class Spieler {
-	Stone[] playerStones;
+	private LinkedList<Stone> playerStones;
 	
-	Spieler(){
+	public enum spielerFarbe{
+		WEIß,
+		SCHWARZ
+	}
+	
+	public Spieler(spielerFarbe color){
+		String farbe;
+		char linkesteBkoordinate;
 		
+		playerStones = new LinkedList<Stone>();
+		
+		if(color == spielerFarbe.WEIß){
+			farbe = "Weiß";
+			
+			//Für die beiden unteren Zahlenreihen...
+			for(int i = Koordinate.MAX_Z_K; i >= Koordinate.MAX_Z_K - 1; i--){
+				//...berechne das linkeste schwarze Feld der aktuellen Zahlenreihe
+				linkesteBkoordinate = (char)(Koordinate.MIN_B_K + i%2);
+				//Setze vom linkesten Feld ausgehend alle 2 Felder einen Stein
+				for(char c = linkesteBkoordinate; c <= Koordinate.MAX_B_K; c += 2){
+					
+					//Wenn aktuelle Koordinate untere linke Ecke, setze Lady, sonst Stein
+					if(i == Koordinate.MAX_Z_K && c == linkesteBkoordinate){
+						playerStones.add(new Lady(farbe, new Koordinate(i, c)));
+					}else{
+						playerStones.add(new Stone(farbe, new Koordinate(i, c)));
+					}		
+				}
+			}
+		}else{
+			farbe = "Schwarz";
+			
+			//Für die beiden oberen Zahlenreihen...
+			for(int i = Koordinate.MIN_Z_K; i <= Koordinate.MIN_Z_K + 1; i++){
+				//...berechne das linkeste schwarze Feld der aktuellen Zahlenreihe
+				linkesteBkoordinate = (char)(Koordinate.MIN_B_K + i%2);
+				//Setze vom linkesten Feld ausgehend alle 2 Felder einen Stein
+				for(char c = linkesteBkoordinate; c <= Koordinate.MAX_B_K; c += 2){
+					
+					//Wenn aktuelle Koordinate obere rechte Ecke, dann Lady, sonst Stein
+					if(i == Koordinate.MIN_Z_K && 
+							(c == Koordinate.MAX_B_K || c == Koordinate.MAX_B_K-1)){
+						playerStones.add(new Lady(farbe, new Koordinate(i, c)));
+					}else{
+						playerStones.add(new Stone(farbe, new Koordinate(i, c)));
+					}		
+				}
+			}
+		}
+		
+		//(DEBUG)
+		//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
+		for(Stone buf : playerStones){
+			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
+			
+			if(buf instanceof Lady){
+				System.out.println(" Lady");
+			}else{
+				System.out.println();
+			}
+		}
 	}
 }
