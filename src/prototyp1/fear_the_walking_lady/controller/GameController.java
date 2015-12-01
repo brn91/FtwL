@@ -14,7 +14,7 @@ public class GameController {
 	 * Erzeugt einen GameController, der das Spiel verwaltet
 	 */
 	public GameController(){
-		myInterface = new TextInterface();
+		this.myInterface = new TextInterface();
 	}
 	
 //	public boolean createInterface(){
@@ -28,7 +28,7 @@ public class GameController {
 		int eingabe;		
 		
 		do{
-			eingabe = myInterface.createAndPrintStartMenue();
+			eingabe = this.myInterface.createAndPrintStartMenue();
 			
 			switch(eingabe){
 				case 1:		//Spielregeln (In einer Funktion + Internetlink?)
@@ -53,8 +53,20 @@ public class GameController {
 	 * Startet und verwaltet ein Spiel Mensch gegen Mensch
 	 */
 	public void runGameHvsH(){
-		zeit = myInterface.createWindowAskTime();
-		myInterface.createWindowAskWhoStarts();
+		
+		this.zeit = this.myInterface.createWindowAskTime();
+		this.player1turn = this.myInterface.createWindowAskWhoStarts();
+		
+		if(this.player1turn == true){
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler2 = new Spieler(Spieler.spielerFarbe.WEIß);
+		}else{
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.WEIß);
+			this.spieler2 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+		}
+		
+		//Reihenfolge muss noch beachtet werden
+		this.myInterface.createAndPrintGameMenueHvsH(spieler1, spieler2, player1turn);
 		
 	}
 	
@@ -69,7 +81,7 @@ public class GameController {
 		return false;
 	}
 	
-	public boolean ueberpruefeSpielzeug(){
+	public boolean ueberpruefeSpielzug(){
 		return false;
 	}
 }

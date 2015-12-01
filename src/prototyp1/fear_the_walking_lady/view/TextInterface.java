@@ -30,8 +30,17 @@ public class TextInterface {
 		return menuePunkt;
 	}
 
-	public Bewegungskoordinate createAndPrintGameMenueHvsH(Spieler spieler){
-		return null;
+	public Bewegungskoordinate createAndPrintGameMenueHvsH(
+			Spieler spieler1, Spieler spieler2, boolean player1turn){
+		
+		Field feld = new Field(spieler1.getStones(), spieler2.getStones());
+		Bewegungskoordinate koordinate;
+		
+		//Im GameMenü wird Spielfeld gezeichnet und Spieler nach Koordinaten gefragt
+		myGameMenue = new GameMenue(feld, spieler1);
+		koordinate = myGameMenue.zeichneDich(player1turn);
+		
+		return koordinate;
 	}
 	
 	public Bewegungskoordinate createAndPrintGameMenueHvsC(Spieler spieler){

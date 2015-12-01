@@ -1,26 +1,35 @@
 package prototyp1.fear_the_walking_lady.view;
 
 import prototyp1.fear_the_walking_lady.modell.*;
+import java.util.Scanner;
 
 public class GameMenue {
-	Field myField;
-	Spieler player1sturn;
+	private Field myField;
+	private Spieler player1sturn;
 	
 	public GameMenue(Field feld, Spieler player1sturn){
 		this.myField = feld;
 		this.player1sturn = player1sturn;
 	}
 	
-	public Bewegungskoordinate zeichneDich(){
-		//Spielfeld Layoutreferenz
-//		System.out.println("1   " + "\u25A0" + "   " + "\u25A0" + "   " + "\u25A0");
-//		System.out.println("2 \u25A0" + "   " + "\u25A0" + "   " + "\u25A0" + "   ");
-//		System.out.println("3   " + "\u25A0" + "   " + "\u25A0" + "   " + "\u25A0");
-//		System.out.println("4 \u25A0" + "   " + "\u25A0" + "   " + "\u25A0" + "   ");
-//		System.out.println("5   " + "\u25A0" + "   " + "\u25A0" + "   " + "\u25A0");
-//		System.out.println("6 \u25A0" + "   " + "\u25A0" + "   " + "\u25A0" + "   ");
-//		System.out.println("  A " + "B " + "C " + "D " + "E " + "F ");
-//		System.out.println("WStein \u25CB , SStein \u25CF , WLady \u2606 , SLady \u2605");
+	public Bewegungskoordinate zeichneDich(boolean player1turn){
+		Scanner in = new Scanner(System.in);
+		
+		//Spielername als Membervariable
+		if(player1turn){
+			System.out.println("Spieler 1 ist dran");
+		}else{
+			System.out.println("Spieler 2 ist dran");
+		}
+		
+		//Gebe für jede Zeile des Feldes...
+		for(int i = 0; i < Koordinate.MAX_Z_K + 1; i++){
+			//...jede Spalte auf dem Bildschirm aus
+			for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
+				System.out.print(this.myField.getFeld()[i][j]);
+			}
+			System.out.println();
+		}
 		
 		return null;
 	}

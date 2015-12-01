@@ -1,9 +1,7 @@
 package prototyp1.fear_the_walking_lady.modell;
 
 public class Koordinate {
-	public static final char MIN_B_K = 'A';
 	public static final char MAX_B_K = 'F';
-	public static final int MIN_Z_K = 1;
 	public static final int MAX_Z_K = 6;
 	
 	private int zahl;

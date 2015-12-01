@@ -22,7 +22,7 @@ public class Spieler {
 			//Für die beiden unteren Zahlenreihen...
 			for(int i = Koordinate.MAX_Z_K; i >= Koordinate.MAX_Z_K - 1; i--){
 				//...berechne das linkeste schwarze Feld der aktuellen Zahlenreihe
-				linkesteBkoordinate = (char)(Koordinate.MIN_B_K + i%2);
+				linkesteBkoordinate = (char)('A' + i%2);
 				//Setze vom linkesten Feld ausgehend alle 2 Felder einen Stein
 				for(char c = linkesteBkoordinate; c <= Koordinate.MAX_B_K; c += 2){
 					
@@ -38,15 +38,14 @@ public class Spieler {
 			farbe = "Schwarz";
 			
 			//Für die beiden oberen Zahlenreihen...
-			for(int i = Koordinate.MIN_Z_K; i <= Koordinate.MIN_Z_K + 1; i++){
+			for(int i = 1; i <= 2; i++){
 				//...berechne das linkeste schwarze Feld der aktuellen Zahlenreihe
-				linkesteBkoordinate = (char)(Koordinate.MIN_B_K + i%2);
+				linkesteBkoordinate = (char)('A' + i%2);
 				//Setze vom linkesten Feld ausgehend alle 2 Felder einen Stein
 				for(char c = linkesteBkoordinate; c <= Koordinate.MAX_B_K; c += 2){
 					
 					//Wenn aktuelle Koordinate obere rechte Ecke, dann Lady, sonst Stein
-					if(i == Koordinate.MIN_Z_K && 
-							(c == Koordinate.MAX_B_K || c == Koordinate.MAX_B_K-1)){
+					if(i == 1 && (c == Koordinate.MAX_B_K || c == Koordinate.MAX_B_K-1)){
 						playerStones.add(new Lady(farbe, new Koordinate(i, c)));
 					}else{
 						playerStones.add(new Stone(farbe, new Koordinate(i, c)));
@@ -66,5 +65,9 @@ public class Spieler {
 				System.out.println();
 			}
 		}
+	}
+	
+	public LinkedList<Stone> getStones(){
+		return this.playerStones;
 	}
 }
