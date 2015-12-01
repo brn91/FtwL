@@ -4,6 +4,7 @@ import prototyp1.fear_the_walking_lady.view.*;
 import prototyp1.fear_the_walking_lady.modell.*;
 
 public class GameController {
+	public static boolean activateCheats = false;
 	TextInterface myInterface;
 	boolean player1turn;
 	Spieler spieler1;
@@ -24,7 +25,7 @@ public class GameController {
 	/**
 	 * Gibt das Startmenü aus und verarbeitet die Eingabe
 	 */
-	public void runStartMenue(){
+	public void runStartMenue(){		
 		int eingabe;		
 		
 		do{
@@ -53,6 +54,8 @@ public class GameController {
 	 * Startet und verwaltet ein Spiel Mensch gegen Mensch
 	 */
 	public void runGameHvsH(){
+		boolean aktuellerSpielzugGueltig = false;
+		String spielerEingabe;
 		
 		this.zeit = this.myInterface.createWindowAskTime();
 		this.player1turn = this.myInterface.createWindowAskWhoStarts();
@@ -67,7 +70,15 @@ public class GameController {
 		
 		//Reihenfolge muss noch beachtet werden
 		this.myInterface.createAndPrintGameMenueHvsH(spieler1, spieler2, player1turn);
+		this.myInterface.createAndPrintGameMenueHvsH(spieler1, spieler2, !player1turn);
 		
+//		do{
+//			spielerEingabe = this.myInterface.createAndPrintGameMenueHvsH(
+//					spieler1, spieler2, player1turn);
+//			aktuellerSpielzugGueltig = ueberpruefeSpielzug(spielerEingabe);
+//		}while(aktuellerSpielzugGueltig == false);
+		
+
 	}
 	
 	/**
@@ -81,7 +92,9 @@ public class GameController {
 		return false;
 	}
 	
-	public boolean ueberpruefeSpielzug(){
+	public boolean ueberpruefeSpielzug(String spielerEingabe){
+		
+		
 		return false;
 	}
 }

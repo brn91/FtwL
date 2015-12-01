@@ -45,6 +45,11 @@ public class Field {
 			
 	}
 	
+	/**
+	 * Rückgabe des aktuellen Spielfelds.
+	 * 
+	 * @return feld Das Spielfeld
+	 */
 	public String[][] getFeld(){
 		return this.feld;
 	}

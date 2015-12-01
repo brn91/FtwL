@@ -4,20 +4,26 @@ import java.util.LinkedList;
 
 public class Spieler {
 	private LinkedList<Stone> playerStones;
+	private String farbe;
 	
 	public enum spielerFarbe{
 		WEIß,
 		SCHWARZ
 	}
 	
+	/**
+	 * Erstellt die Spielersteine an den Startkoordinaten 
+	 * und weist ihm eine Farbe zu.
+	 * 
+	 * @param color Farbe des Spielers
+	 */
 	public Spieler(spielerFarbe color){
-		String farbe;
 		char linkesteBkoordinate;
 		
 		this.playerStones = new LinkedList<Stone>();
 		
 		if(color == spielerFarbe.WEIß){
-			farbe = "Weiß";
+			this.farbe = "Weiß";
 			
 			//Für die beiden unteren Zahlenreihen...
 			for(int i = Koordinate.MAX_Z_K; i >= Koordinate.MAX_Z_K - 1; i--){
@@ -35,7 +41,7 @@ public class Spieler {
 				}
 			}
 		}else{
-			farbe = "Schwarz";
+			this.farbe = "Schwarz";
 			
 			//Für die beiden oberen Zahlenreihen...
 			for(int i = 1; i <= 2; i++){
@@ -54,20 +60,34 @@ public class Spieler {
 			}
 		}
 		
-		//(DEBUG)
-		//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
-		for(Stone buf : this.playerStones){
-			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
-			
-			if(buf instanceof Lady){
-				System.out.println(" Lady");
-			}else{
-				System.out.println();
-			}
-		}
+//		//(DEBUG)
+//		//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
+//		for(Stone buf : this.playerStones){
+//			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
+//			
+//			if(buf instanceof Lady){
+//				System.out.println(" Lady");
+//			}else{
+//				System.out.println();
+//			}
+//		}
 	}
 	
+	/**
+	 * Gibt die Steine des Spieler zurück
+	 * 
+	 * @return playerStones Liste der Steine
+	 */
 	public LinkedList<Stone> getStones(){
 		return this.playerStones;
+	}
+	
+	/**
+	 * Gibt die Farbe des Spielers zurück
+	 * 
+	 * @return farbe Farbe
+	 */
+	public String getFarbe(){
+		return this.farbe;
 	}
 }

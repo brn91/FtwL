@@ -15,6 +15,7 @@ public class TextInterface {
 	public TextInterface(){
 		
 	}
+	
 	/**
 	 * Gibt das Startmenue mit Eingabeaufforderung auf dem
 	 * Bildschirm aus.
@@ -30,16 +31,30 @@ public class TextInterface {
 		return menuePunkt;
 	}
 
-	public Bewegungskoordinate createAndPrintGameMenueHvsH(
+	/**
+	 * Erzeugt das Menü, welches die Spieler nimmt,
+	 * das Spielfeld entsprechend ausgibt 
+	 * und die Spielereingabe zurückgibt.
+	 * 
+	 * @param spieler1 Spieler 1
+	 * @param spieler2 Spieler 2
+	 * @param player1turn Ist Spieler 1 gerade am Zug?
+	 * @return koordinate Die Spielereingabe
+	 */
+	public String createAndPrintGameMenueHvsH(
 			Spieler spieler1, Spieler spieler2, boolean player1turn){
 		
 		Field feld = new Field(spieler1.getStones(), spieler2.getStones());
-		Bewegungskoordinate koordinate;
+		String koordinate;
 		
 		//Im GameMenü wird Spielfeld gezeichnet und Spieler nach Koordinaten gefragt
-		this.myGameMenue = new GameMenue(feld, spieler1);
+		if(player1turn){
+			this.myGameMenue = new GameMenue(feld, spieler1);
+		}else{
+			this.myGameMenue = new GameMenue(feld, spieler2);
+		}
 		koordinate = this.myGameMenue.zeichneDich(player1turn);
-		
+			
 		return koordinate;
 	}
 	
