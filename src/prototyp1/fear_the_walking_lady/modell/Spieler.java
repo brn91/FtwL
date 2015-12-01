@@ -14,7 +14,7 @@ public class Spieler {
 		String farbe;
 		char linkesteBkoordinate;
 		
-		playerStones = new LinkedList<Stone>();
+		this.playerStones = new LinkedList<Stone>();
 		
 		if(color == spielerFarbe.WEIß){
 			farbe = "Weiß";
@@ -28,9 +28,9 @@ public class Spieler {
 					
 					//Wenn aktuelle Koordinate untere linke Ecke, setze Lady, sonst Stein
 					if(i == Koordinate.MAX_Z_K && c == linkesteBkoordinate){
-						playerStones.add(new Lady(farbe, new Koordinate(i, c)));
+						this.playerStones.add(new Lady(farbe, new Koordinate(i, c)));
 					}else{
-						playerStones.add(new Stone(farbe, new Koordinate(i, c)));
+						this.playerStones.add(new Stone(farbe, new Koordinate(i, c)));
 					}		
 				}
 			}
@@ -46,9 +46,9 @@ public class Spieler {
 					
 					//Wenn aktuelle Koordinate obere rechte Ecke, dann Lady, sonst Stein
 					if(i == 1 && (c == Koordinate.MAX_B_K || c == Koordinate.MAX_B_K-1)){
-						playerStones.add(new Lady(farbe, new Koordinate(i, c)));
+						this.playerStones.add(new Lady(farbe, new Koordinate(i, c)));
 					}else{
-						playerStones.add(new Stone(farbe, new Koordinate(i, c)));
+						this.playerStones.add(new Stone(farbe, new Koordinate(i, c)));
 					}		
 				}
 			}
@@ -56,7 +56,7 @@ public class Spieler {
 		
 		//(DEBUG)
 		//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
-		for(Stone buf : playerStones){
+		for(Stone buf : this.playerStones){
 			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
 			
 			if(buf instanceof Lady){

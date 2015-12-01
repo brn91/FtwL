@@ -24,8 +24,8 @@ public class TextInterface {
 	public int createAndPrintStartMenue(){
 		int menuePunkt;
 		
-		myStartMenue = new StartMenue();
-		menuePunkt = myStartMenue.zeichneDich();
+		this.myStartMenue = new StartMenue();
+		menuePunkt = this.myStartMenue.zeichneDich();
 		
 		return menuePunkt;
 	}
@@ -37,8 +37,8 @@ public class TextInterface {
 		Bewegungskoordinate koordinate;
 		
 		//Im GameMenü wird Spielfeld gezeichnet und Spieler nach Koordinaten gefragt
-		myGameMenue = new GameMenue(feld, spieler1);
-		koordinate = myGameMenue.zeichneDich(player1turn);
+		this.myGameMenue = new GameMenue(feld, spieler1);
+		koordinate = this.myGameMenue.zeichneDich(player1turn);
 		
 		return koordinate;
 	}

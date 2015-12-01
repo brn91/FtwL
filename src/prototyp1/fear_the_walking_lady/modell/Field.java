@@ -10,17 +10,17 @@ public class Field {
 		int zeilen = Koordinate.MAX_Z_K + 1;
 		int spalten = Koordinate.MAX_B_K - 'A' + 2;
 		
-		feld = new String[zeilen][spalten];
+		this.feld = new String[zeilen][spalten];
 		
 		//Nummernbeschriftung
 		for(int i = 0; i < zeilen - 1; i++){
-			feld[i][0] = String.valueOf(i + 1);
+			this.feld[i][0] = String.valueOf(i + 1);
 		}
 		
 		//Buchstabenbeschriftung
-		feld[zeilen-1][0] = "  ";
+		this.feld[zeilen-1][0] = "  ";
 		for(int i = 1; i < spalten; i++){
-			feld[zeilen-1][i] = (char)('A' + i - 1) + " ";
+			this.feld[zeilen-1][i] = (char)('A' + i - 1) + " ";
 		}
 		
 		//Standardfeld mit schwarzen Kacheln füllen
@@ -32,9 +32,9 @@ public class Field {
 				//Wenn entweder aktuelleZeile ungerade ist oder 
 				//aktuelleSpalte ungerade ist, füge Leerzeichen ein
 				if((i%2 ^ j%2) == 1){
-					feld[i][j] = "  ";
+					this.feld[i][j] = "  ";
 				}else{
-					feld[i][j] = " \u25A0";
+					this.feld[i][j] = " \u25A0";
 				}
 			}
 		}
@@ -59,15 +59,15 @@ public class Field {
 			
 			if(buf.getColor().equals("Weiß")){
 				if(buf instanceof Lady){
-					feld[zahlBuf][buchstabenBuf] = " \u263A";
+					this.feld[zahlBuf][buchstabenBuf] = " \u263A";
 				}else{
-					feld[zahlBuf][buchstabenBuf] = " \u25CB";
+					this.feld[zahlBuf][buchstabenBuf] = " \u25CB";
 				}
 			}else{
 				if(buf instanceof Lady){
-					feld[zahlBuf][buchstabenBuf] = " \u263B";
+					this.feld[zahlBuf][buchstabenBuf] = " \u263B";
 				}else{
-					feld[zahlBuf][buchstabenBuf] = " \u25CF";
+					this.feld[zahlBuf][buchstabenBuf] = " \u25CF";
 				}
 			}			
 		}
