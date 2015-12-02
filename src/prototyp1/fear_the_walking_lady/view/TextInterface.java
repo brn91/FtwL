@@ -105,8 +105,8 @@ public class TextInterface {
 	 * 
 	 * @return zeit Rundenzeit
 	 */
-	public int createWindowAskTime(){
-		int zeit = 0;
+	public long createWindowAskTime(){
+		long zeit = 0;
 		
 		//Frage nach der Zeit, solange sie <=0 ist
 		do{
@@ -131,6 +131,6 @@ public class TextInterface {
 			zeit = 300;
 		}
 		
-		return zeit;
+		return zeit * 1000;
 	}
 }

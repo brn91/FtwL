@@ -59,18 +59,6 @@ public class Spieler {
 				}
 			}
 		}
-		
-//		//(DEBUG)
-//		//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
-//		for(Stone buf : this.playerStones){
-//			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
-//			
-//			if(buf instanceof Lady){
-//				System.out.println(" Lady");
-//			}else{
-//				System.out.println();
-//			}
-//		}
 	}
 	
 	/**
@@ -89,5 +77,19 @@ public class Spieler {
 	 */
 	public String getFarbe(){
 		return this.farbe;
+	}
+	
+	//(DEBUG)
+	//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus
+	public void printStones(){
+		for(Stone buf : this.playerStones){
+			System.out.print(buf.getKoordinate().getBuchstabe() + "" + buf.getKoordinate().getZahl());
+			
+			if(buf instanceof Lady){
+				System.out.println(" Lady");
+			}else{
+				System.out.println();
+			}
+		}
 	}
 }

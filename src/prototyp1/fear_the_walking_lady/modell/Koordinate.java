@@ -7,7 +7,7 @@ public class Koordinate {
 	private int zahl;
 	private char buchstabe;
 	
-	Koordinate(int zahl, char buchstabe){
+	public Koordinate(int zahl, char buchstabe){
 		this.zahl = zahl;
 		this.buchstabe = buchstabe;
 	}
@@ -27,4 +27,31 @@ public class Koordinate {
 	public void setBuchstabe(char buchstabe){
 		this.buchstabe = buchstabe;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + buchstabe;
+		result = prime * result + zahl;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Koordinate other = (Koordinate) obj;
+		if (buchstabe != other.buchstabe)
+			return false;
+		if (zahl != other.zahl)
+			return false;
+		return true;
+	}
+	
+	
 }

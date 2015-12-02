@@ -78,7 +78,7 @@ public class GameMenue{
 				menueEingabe = Integer.parseInt(in.nextLine());
 				
 				switch(menueEingabe){
-				case 0:		//Spielanleitung aufrufen
+				case 0:		rueckgabe = "Spielanleitung";
 							break;
 				case 1: 	System.out.println("Gebe die Koordinaten ein:");
 							System.out.println("(B1A2 steht zB für: Ziehe B1 auf B2)");
@@ -93,7 +93,7 @@ public class GameMenue{
 				case 3:		if(GameController.activateCheats){
 								System.out.println("Gebe die Koordinaten ein:");
 								System.out.println("(B1 steht zB für: Wandle B1 um)");
-								rueckgabe = in.nextLine();
+								rueckgabe = in.nextLine() + "@";
 							}else{
 								System.out.println("Geben Sie eine gültige Zahl ein!");
 							}
