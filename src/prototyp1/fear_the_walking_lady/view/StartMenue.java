@@ -3,7 +3,6 @@ package prototyp1.fear_the_walking_lady.view;
 import java.util.Scanner;
 
 public class StartMenue {
-	Scanner in = new Scanner(System.in);
 	
 	public StartMenue(){
 		
@@ -11,6 +10,8 @@ public class StartMenue {
 	
 	public int zeichneDich(){
 		int eingabe = 0;
+		Scanner in = new Scanner(System.in);
+
 		
 		//Frage nach einer Eingabe bis Sie gültig ist
 		do{
@@ -21,6 +22,7 @@ public class StartMenue {
 			System.out.println("4: Beenden");
 			
 			try{
+
 				eingabe = Integer.parseInt(in.nextLine());
 				
 				if(eingabe < 1 || eingabe > 4){

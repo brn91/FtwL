@@ -4,9 +4,10 @@ import prototyp1.fear_the_walking_lady.controller.GameController;
 import prototyp1.fear_the_walking_lady.modell.*;
 import java.util.Scanner;
 
-public class GameMenue {
+public class GameMenue{
 	private Field myField;
 	private Spieler spieler;
+	private long rundenZeit;
 	
 	/**
 	 * Erzeugt ein Spielmenü in dem das Spielfeld
@@ -15,9 +16,10 @@ public class GameMenue {
 	 * @param feld Das Spielfeld, welchen ausgegeben wird
 	 * @param spieler Der Spieler, der an der Reihe ist
 	 */
-	public GameMenue(Field feld, Spieler spieler){
+	public GameMenue(Field feld, Spieler spieler, long rundenZeit){
 		this.myField = feld;
 		this.spieler = spieler;
+		this.rundenZeit = rundenZeit;
 	}
 	
 	/**
@@ -71,9 +73,6 @@ public class GameMenue {
 			System.out.println("2: Beenden (Du Verlierst!)");
 		}
 		
-	
-		
-		//Eingabe des Menüpunktes und Eingabe der Bewegungskoordinaten
 		do{
 			try{
 				menueEingabe = Integer.parseInt(in.nextLine());
@@ -106,6 +105,11 @@ public class GameMenue {
 				System.out.println("Geben Sie eine Zahl ein!\n");
 			}			
 		}while(rueckgabe == null);
+		
+		//Falls die RundenZeit überschritten wurde
+		if(System.currentTimeMillis() > rundenZeit){
+			rueckgabe = "Zeitüberschreitung";
+		}
 
 		return rueckgabe;
 	}	

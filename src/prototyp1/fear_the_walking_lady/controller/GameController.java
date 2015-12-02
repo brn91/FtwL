@@ -1,6 +1,8 @@
 package prototyp1.fear_the_walking_lady.controller;
 
 import prototyp1.fear_the_walking_lady.view.*;
+
+
 import prototyp1.fear_the_walking_lady.modell.*;
 
 public class GameController {
@@ -56,21 +58,26 @@ public class GameController {
 	public void runGameHvsH(){
 		boolean aktuellerSpielzugGueltig = false;
 		String spielerEingabe;
+		long rundenZeit;
+		
 		
 		this.zeit = this.myInterface.createWindowAskTime();
-		this.player1turn = this.myInterface.createWindowAskWhoStarts();
 		
-		if(this.player1turn == true){
-			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
-			this.spieler2 = new Spieler(Spieler.spielerFarbe.WEIß);
-		}else{
-			this.spieler1 = new Spieler(Spieler.spielerFarbe.WEIß);
-			this.spieler2 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
-		}
+		//Frage, welcher Spieler startet und setze die Anfangssteine
+		this.player1turn = this.myInterface.createWindowAskWhoStarts();
+		stelleSteineAnfangsposition();
 		
 		//Reihenfolge muss noch beachtet werden
-		this.myInterface.createAndPrintGameMenueHvsH(spieler1, spieler2, player1turn);
-		this.myInterface.createAndPrintGameMenueHvsH(spieler1, spieler2, !player1turn);
+		rundenZeit = System.currentTimeMillis() + this.zeit;
+
+		this.myInterface.createAndPrintGameMenueHvsH(
+				this.spieler1, this.spieler2, this.player1turn, rundenZeit);
+		
+		
+		rundenZeit = System.currentTimeMillis() + this.zeit;
+		
+		this.myInterface.createAndPrintGameMenueHvsH(
+				this.spieler1, this.spieler2, !this.player1turn, rundenZeit);
 		
 //		do{
 //			spielerEingabe = this.myInterface.createAndPrintGameMenueHvsH(
@@ -96,5 +103,18 @@ public class GameController {
 		
 		
 		return false;
+	}
+	
+	/**
+	 * Stellt alle Steine an die Anfangsposition.
+	 */
+	public void stelleSteineAnfangsposition(){
+		if(this.player1turn == true){
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler2 = new Spieler(Spieler.spielerFarbe.WEIß);
+		}else{
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.WEIß);
+			this.spieler2 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+		}
 	}
 }

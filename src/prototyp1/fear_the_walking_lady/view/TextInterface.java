@@ -1,7 +1,8 @@
 package prototyp1.fear_the_walking_lady.view;
 
-import java.util.Scanner;
+import prototyp1.fear_the_walking_lady.controller.GameController;
 import prototyp1.fear_the_walking_lady.modell.*;
+import java.util.Scanner;
 
 public class TextInterface {
 	StartMenue myStartMenue;
@@ -42,18 +43,19 @@ public class TextInterface {
 	 * @return koordinate Die Spielereingabe
 	 */
 	public String createAndPrintGameMenueHvsH(
-			Spieler spieler1, Spieler spieler2, boolean player1turn){
+			Spieler spieler1, Spieler spieler2, boolean player1turn, long rundenZeit){
 		
 		Field feld = new Field(spieler1.getStones(), spieler2.getStones());
-		String koordinate;
+		String koordinate = null;
 		
 		//Im GameMenü wird Spielfeld gezeichnet und Spieler nach Koordinaten gefragt
 		if(player1turn){
-			this.myGameMenue = new GameMenue(feld, spieler1);
+			this.myGameMenue = new GameMenue(feld, spieler1, rundenZeit);
 		}else{
-			this.myGameMenue = new GameMenue(feld, spieler2);
+			this.myGameMenue = new GameMenue(feld, spieler2, rundenZeit);
 		}
 		koordinate = this.myGameMenue.zeichneDich(player1turn);
+
 			
 		return koordinate;
 	}
@@ -81,7 +83,10 @@ public class TextInterface {
 				
 				if(spieler == 1){
 					spieler1beginnt = true;
-				}else if(spieler != 2){
+					System.out.println("Spieler 1 beginnt!");
+				}else if(spieler == 2){
+					System.out.println("Spieler 2 beginnt!");
+				}else{
 					System.out.println("Geben Sie 1 oder 2 ein!");
 				}
 			}
@@ -120,6 +125,11 @@ public class TextInterface {
 			}
 			
 		}while(zeit <= 0);
+		
+		//Bei aktivierten Cheats beträgt die RundenZeit 5 Minuten
+		if(GameController.activateCheats){
+			zeit = 300;
+		}
 		
 		return zeit;
 	}
