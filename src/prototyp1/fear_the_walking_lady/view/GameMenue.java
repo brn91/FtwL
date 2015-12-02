@@ -36,9 +36,9 @@ public class GameMenue{
 		
 		//Ausgabe, welcher Spieler an der reihe ist
 		if(player1turn){
-			System.out.println("Spieler 1 ist dran\n");
+			System.out.println("\n\n\nSpieler 1 ist dran\n");
 		}else{
-			System.out.println("Spieler 2 ist dran\n");
+			System.out.println("\n\n\nSpieler 2 ist dran\n");
 		}
 		
 		if(this.spieler.getFarbe().equals("Weiß")){

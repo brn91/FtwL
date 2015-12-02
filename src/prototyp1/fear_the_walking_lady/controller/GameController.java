@@ -77,7 +77,11 @@ public class GameController {
 						this.spieler1, this.spieler2, this.player1turn, zeitBuf);
 				spielerEingabe = spielerEingabe.toUpperCase();
 				//Die Eingabe verarbeiten
-				spielzugGueltig = ueberpruefeSpielzug(spielerEingabe);	
+				spielzugGueltig = ueberpruefeSpielzug(spielerEingabe);
+				if(!spielzugGueltig){
+					System.out.println("Ungültiger Spielzug!");
+				}
+				
 			}while((!spielzugGueltig) && (System.currentTimeMillis() < zeitBuf));		
 			//Wechsle den Spieler
 			player1turn ^= true;
@@ -263,10 +267,8 @@ public class GameController {
 			indexBuf = spieler1.getStones().indexOf(vonStein);
 			
 			if(indexBuf != -1){	
-				if(spieler1.getStones().get(indexBuf).
-						ziehen(nachPos, this.player1turn, spieler1, spieler2)){
-					rundeGueltig = true;
-				}
+				rundeGueltig = spieler1.getStones().get(indexBuf).
+						ziehen(nachPos, this.player1turn, spieler1, spieler2);
 			}
 		}else{
 			vonStein = new Stone(spieler2.getFarbe(), vonPos);
@@ -274,10 +276,8 @@ public class GameController {
 			indexBuf = spieler2.getStones().indexOf(vonStein);
 		
 			if(indexBuf != -1){
-				if(spieler2.getStones().get(indexBuf).
-						ziehen(nachPos, this.player1turn, spieler1, spieler2)){
-					rundeGueltig = true;
-				}
+				rundeGueltig = spieler2.getStones().get(indexBuf).
+						ziehen(nachPos, this.player1turn, spieler1, spieler2);
 			}
 		}		
 		return rundeGueltig;
