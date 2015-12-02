@@ -137,7 +137,7 @@ public class GameController {
 			default:	
 				if(koordinatenEingabeCheck(spielerEingabe) == true){
 					if(GameController.activateCheats && spielerEingabe.length() == 3){
-						cheatStoneToLady(new Koordinate((int)(spielerEingabe.charAt(1) - 47),
+						cheatStoneToLady(new Koordinate((int)(spielerEingabe.charAt(1) - 48),
 														spielerEingabe.charAt(0)));
 					}else{
 						rundeGueltig = waehleSteinUndZiehe(spielerEingabe);		
@@ -173,21 +173,21 @@ public class GameController {
 				eingabeLegal = false;
 			}
 		}
-		
+	
 		//Länge und die einzelnen Chars auf Gültigkeit überprüfen
 		if(eingabeLegal){
 			if(spielerEingabe.charAt(0) < 'A' || 
 					spielerEingabe.charAt(0) > Koordinate.MAX_B_K){
 				eingabeLegal = false;
-			}else if(spielerEingabe.charAt(1) < (char)(48) ||
+			}else if(spielerEingabe.charAt(1) < '1' ||
 					spielerEingabe.charAt(1) > (char)(Koordinate.MAX_Z_K + 47)){
 				eingabeLegal = false;
 			}
-			if((GameController.activateCheats && (spielerEingabe.charAt(2) != '@')) == false){
+			if((GameController.activateCheats && (spielerEingabe.charAt(2) == '@')) == false){
 				if(spielerEingabe.charAt(2) < 'A' ||
 						spielerEingabe.charAt(2) > Koordinate.MAX_B_K){
 					eingabeLegal = false;
-				}else if(spielerEingabe.charAt(3) < (char)(48) ||
+				}else if(spielerEingabe.charAt(3) < '1' ||
 						spielerEingabe.charAt(3) > (char)(Koordinate.MAX_Z_K + 47)){
 					eingabeLegal = false;
 				}
@@ -197,9 +197,39 @@ public class GameController {
 		return eingabeLegal;
 	}
 	
-	
+	/*
+	 * Ersetzt einen Stein des Spielers mit einer Lady
+	 * 
+	 * @param koordinate Die Koordinate des Steins
+	 */
 	private void cheatStoneToLady(Koordinate koordinate){
+		Stone indexChecker;
+		Lady neueLady;
+		int indexBuf;
 		
+		if(player1turn){
+			neueLady = new Lady(spieler1.getFarbe(), koordinate);
+			indexChecker = new Stone(spieler1.getFarbe(), koordinate);
+			indexBuf = spieler1.getStones().indexOf(indexChecker);
+			
+			//Wenn Stein an der Position ist
+			if(indexBuf != -1){	
+				spieler1.getStones().remove(indexBuf);
+				spieler1.getStones().add(neueLady);
+				
+			}
+		}else{
+			neueLady = new Lady(spieler2.getFarbe(), koordinate);
+			indexChecker = new Stone(spieler2.getFarbe(), koordinate);
+			indexBuf = spieler2.getStones().indexOf(indexChecker);
+			
+			//Wenn Stein an der Position ist
+			if(indexBuf != -1){	
+				spieler2.getStones().remove(indexBuf);
+				spieler2.getStones().add(neueLady);
+				
+			}
+		}
 	}
 	
 	/*
@@ -210,7 +240,6 @@ public class GameController {
 	 * @param spielerEingabe Die vom Spieler eingegeben Koordinaten
 	 * @return rundeGueltig Wahr, wenn die Eingabe umgesetzt werden konnte
 	 */
-	
 	private boolean waehleSteinUndZiehe(String spielerEingabe){
 		boolean rundeGueltig = true;
 		int indexBuf;

@@ -93,10 +93,12 @@ public class GameMenue{
 				case 3:		if(GameController.activateCheats){
 								System.out.println("Gebe die Koordinaten ein:");
 								System.out.println("(B1 steht zB für: Wandle B1 um)");
-								rueckgabe = in.nextLine() + "@";
+								rueckgabe = in.nextLine();
+								rueckgabe += "@";
 							}else{
 								System.out.println("Geben Sie eine gültige Zahl ein!");
 							}
+							break;
 				default:    System.out.println("Geben Sie eine gültige Zahl ein!");
 							break;				
 				}

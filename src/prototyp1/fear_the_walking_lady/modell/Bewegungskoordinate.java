@@ -1,21 +1,19 @@
 package prototyp1.fear_the_walking_lady.modell;
 
-public class Bewegungskoordinate extends Koordinate{
-	private int neuZahl;
-	private char neuBuchstabe;
-	private boolean fertig;
+public class Bewegungskoordinate{
+	private Koordinate start;
+	private Koordinate ziel;
 	
-	public Bewegungskoordinate(int zahl, char buchstabe, int neuzahl, char neubuchstabe){
-		super(zahl, buchstabe);
-		this.neuZahl = neuzahl;
-		this.neuBuchstabe = neubuchstabe;
+	public Bewegungskoordinate(Koordinate start, Koordinate ziel){
+		this.start = start;
+		this.ziel = ziel;
 	}
 	
-	public int getNeuZahl(){
-		return this.neuZahl;
+	public Koordinate getStartKoord(){
+		return this.start;
 	}
 	
-	public char getNeuBuchstabe(){
-		return this.neuBuchstabe;
+	public Koordinate getZielKoord(){
+		return this.ziel;
 	}
 }
