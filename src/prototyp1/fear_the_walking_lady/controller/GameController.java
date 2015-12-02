@@ -48,44 +48,41 @@ public class GameController {
 		}while(eingabe != 4);
 	}
 	
-	public void askTimeLimit(){
-		
-	}
+//	public void askTimeLimit(){
+//		
+//	}
 	
 	/**
 	 * Startet und verwaltet ein Spiel Mensch gegen Mensch
 	 */
 	public void runGameHvsH(){
-		boolean aktuellerSpielzugGueltig = false;
+		boolean spielzugGueltig = false;
 		String spielerEingabe;
 		long rundenZeit;
 		
-		
+		//Ermitteln der rundenZeit
 		this.zeit = this.myInterface.createWindowAskTime();
 		
 		//Frage, welcher Spieler startet und setze die Anfangssteine
 		this.player1turn = this.myInterface.createWindowAskWhoStarts();
 		stelleSteineAnfangsposition();
 		
-		//Reihenfolge muss noch beachtet werden
-		rundenZeit = System.currentTimeMillis() + this.zeit;
-
-		this.myInterface.createAndPrintGameMenueHvsH(
-				this.spieler1, this.spieler2, this.player1turn, rundenZeit);
+		//Spieler wechseln sich ab solange das Spiel läuft
+		do{
+			//Zeit zum Anfang des Zuges ermitteln und rundenZeit dazurechnen
+			rundenZeit = System.currentTimeMillis() + this.zeit;
+			//Tue bis die Zeit abgelaufen ist oder der Spielzug gültig ist
+			do{	
+				//Die Eingabe des Spielers ermitteln
+				spielerEingabe = this.myInterface.createAndPrintGameMenueHvsH(
+						this.spieler1, this.spieler2, this.player1turn, rundenZeit);
+				//Die Eingabe verarbeiten
+				spielzugGueltig = ueberpruefeSpielzug(spielerEingabe);	
+			}while(!spielzugGueltig && (System.currentTimeMillis() < rundenZeit));
+			//Wechsle den Spieler
+			player1turn ^= true;
+		}while(spielLaeuft());
 		
-		
-		rundenZeit = System.currentTimeMillis() + this.zeit;
-		
-		this.myInterface.createAndPrintGameMenueHvsH(
-				this.spieler1, this.spieler2, !this.player1turn, rundenZeit);
-		
-//		do{
-//			spielerEingabe = this.myInterface.createAndPrintGameMenueHvsH(
-//					spieler1, spieler2, player1turn);
-//			aktuellerSpielzugGueltig = ueberpruefeSpielzug(spielerEingabe);
-//		}while(aktuellerSpielzugGueltig == false);
-		
-
 	}
 	
 	/**
@@ -103,6 +100,10 @@ public class GameController {
 		
 		
 		return false;
+	}
+	
+	public boolean spielLaeuft(){
+		return true;
 	}
 	
 	/**
