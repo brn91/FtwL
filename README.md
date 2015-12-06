@@ -1,7 +1,7 @@
 # FtwL
 
 # Regeln
-#Organisatorisches:
+##Organisatorisches:
   1.	Das Biel ist 6 X 6 Felder groß.
   2.	Es gibt helle und dunkle Steine
   3.	Die ersten beiden Reihen der Spielseiten werden mit Steinen besetzt, aber nur die dunklen Felder.
@@ -12,7 +12,8 @@
   7.	Die Eingabe Besteht aus Quelle zu Ziel (XYXY)
     7.1.	X= A-F, Y= 1-6 (Hier Spielfeld einfügen zum Verständnis)
     7.2.	Kleinbuchstaben werden Akzeptiert
-##Spielablauf:
+
+###Spielablauf:
   1.	Es wird abwechselnd Gespielt
   2.	Der Spieler mit den dunklen Steinen beginnt
   3.	Es wird vorwärts diagonal gezogen
