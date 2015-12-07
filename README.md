@@ -2,7 +2,7 @@
 
 # Regeln
 ##Organisatorisches:
-  1.	Das Biel ist 6 X 6 Felder groß.
+  1.	Das Spiel ist 6 X 6 Felder groß.
   2.	Es gibt helle und dunkle Steine
   3.	Die ersten beiden Reihen der Spielseiten werden mit Steinen besetzt, aber nur die dunklen Felder.
   4.	Jeder Spieler besitzt 5 normale Spielsteine und eine Lady.
