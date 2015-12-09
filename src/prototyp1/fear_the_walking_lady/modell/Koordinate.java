@@ -53,5 +53,12 @@ public class Koordinate {
 		return true;
 	}
 	
+	@Override
+	public String toString(){
+		String rueckgabe = String.valueOf(buchstabe);
+		rueckgabe += String.valueOf(zahl);
+		
+		return rueckgabe;
+	}
 	
 }

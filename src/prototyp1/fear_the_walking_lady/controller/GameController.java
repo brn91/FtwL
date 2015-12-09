@@ -2,6 +2,8 @@ package prototyp1.fear_the_walking_lady.controller;
 
 import prototyp1.fear_the_walking_lady.view.*;
 import prototyp1.fear_the_walking_lady.modell.*;
+
+import java.util.LinkedList;
 import java.util.Random;
 
 public class GameController {
@@ -184,7 +186,7 @@ public class GameController {
 					spielerEingabe.charAt(0) > Koordinate.MAX_B_K){
 				eingabeLegal = false;
 			}else if(spielerEingabe.charAt(1) < '1' ||
-					spielerEingabe.charAt(1) > (char)(Koordinate.MAX_Z_K + 47)){
+					spielerEingabe.charAt(1) > (char)(Koordinate.MAX_Z_K + 48)){
 				eingabeLegal = false;
 			}
 			if((GameController.activateCheats && (spielerEingabe.charAt(2) == '@')) == false){
@@ -192,7 +194,7 @@ public class GameController {
 						spielerEingabe.charAt(2) > Koordinate.MAX_B_K){
 					eingabeLegal = false;
 				}else if(spielerEingabe.charAt(3) < '1' ||
-						spielerEingabe.charAt(3) > (char)(Koordinate.MAX_Z_K + 47)){
+						spielerEingabe.charAt(3) > (char)(Koordinate.MAX_Z_K + 48)){
 					eingabeLegal = false;
 				}
 			}
@@ -236,50 +238,270 @@ public class GameController {
 		}
 	}
 	
+	/* Erzeugt eine Liste aller legalen Wege, die ein Spielstein nehmen kann
+	 * Jede dieser legalen Wege ist eine Liste der Koordinaten, die auf dem
+	 * entsprechenden Weg liegen.
+	 * 
+	 * @param spielerEingabe Eingabe des aktuellen Spielers
+	 * @return alleLegalenWege Liste aller legalen Wege
+	 */
+	private LinkedList<LinkedList<Koordinate>> erzeugeGueltigeWege(String spielerEingabe){
+		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
+		LinkedList<Koordinate> legalerWeg = new LinkedList<Koordinate>();
+		Spieler gegner;
+		Spieler eigene;
+		Stone bufGegnerStone;
+		Stone bufEigeneStone;
+		Koordinate vonPos;
+		Koordinate aktKoord;
+		int richtung;
+		
+		vonPos = new Koordinate((int)(spielerEingabe.charAt(1) - 48), 
+				 spielerEingabe.charAt(0));
+
+		if(player1turn){
+			gegner = spieler2;
+			eigene = spieler1;
+		}else{
+			gegner = spieler1;
+			eigene = spieler2;
+		}
+		
+		//Die Farbe des Spielers entscheidet darüber ob die Steine nach
+		//unten(höhere Zahlen) oder nach oben(niedrigere Zahlen) bewegt werden dürfen
+		if(eigene.getFarbe().equals("Schwarz")){
+			richtung = 1;
+		}else{
+			richtung = -1;
+		}
+		
+		//Teste das Feld vorne rechts von der Quellkoordinate! aus gesehen
+		aktKoord = new Koordinate(vonPos.getZahl() + richtung, (char)(vonPos.getBuchstabe() + richtung));
+		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+		legalerWeg = new LinkedList<Koordinate>();
+		//Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+		if(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())){
+			//Wenn ein Gegner auf dem zu testenden Feld (aktKoord) ist
+			if(gegner.getStones().contains(bufGegnerStone)){
+				legalerWeg.add(vonPos);
+				legalerWeg.add(aktKoord);
+				aktKoord = new Koordinate(vonPos.getZahl() + (richtung*2), 
+						(char)(vonPos.getBuchstabe() + (richtung*2)));
+				//Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+				if(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())){
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+				}
+			//Sonst, wenn das zu testende Feld (aktKoord) frei ist
+			}else if(eigene.getStones().contains(bufEigeneStone) == false){
+				legalerWeg.add(vonPos);
+				legalerWeg.add(aktKoord);
+				alleLegalenWege.add(legalerWeg);
+			}
+		}
+		
+		//Teste das Feld vorne links von der Quellkoordinate! aus gesehen
+		aktKoord = new Koordinate(vonPos.getZahl() + richtung, 
+				(char)(vonPos.getBuchstabe() - richtung));
+		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+		legalerWeg = new LinkedList<Koordinate>();
+		//Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+		if(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())){
+			//Wenn ein Gegner auf dem zu testendem Feld (aktKoord) ist
+			if(gegner.getStones().contains(bufGegnerStone)){
+				legalerWeg.add(vonPos);
+				legalerWeg.add(aktKoord);
+				aktKoord = new Koordinate(vonPos.getZahl() + (richtung*2), 
+						(char)(vonPos.getBuchstabe() - (richtung*2)));
+				//Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+				if(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())){
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+				}
+			//Sonst, wenn das zu testende Feld (aktKoord) frei ist
+			}else if(eigene.getStones().contains(bufEigeneStone) == false){
+				legalerWeg.add(vonPos);
+				legalerWeg.add(aktKoord);
+				alleLegalenWege.add(legalerWeg);
+			}
+		}
+	
+		return alleLegalenWege;
+	}
+	
+	/*
+	 * Stellt fest, ob von der aktuellen Position eines Steines ein Gegner geschlagen
+	 * werden kann. Wenn das der Fall ist, werden die Koordinaten in die Liste der legalenWege
+	 * aufgenommen und Rekursiv nach weiteren schlagbaren Gegnern gesucht.
+	 * 
+	 * @param gegner Der Gegner
+	 * @param eigene Der aktuelle Spieler
+	 * @param aktKoord Die Koordinate hinter dem gegnerischen Stein
+	 * @param legalerWeg Der aktuelle legaleWeg, der aufgebaut wird
+	 * @param alleLegalenWege Liste aller legalen Wege
+	 * @return alleLegalenWege Liste aller legalen Wege
+	 */
+	private LinkedList<LinkedList<Koordinate>> pruefeObGegnerSchlagbar(Spieler gegner, Spieler eigene, Koordinate aktKoord,
+			LinkedList<Koordinate> legalerWeg, LinkedList<LinkedList<Koordinate>> alleLegalenWege){
+		Stone bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+		Stone bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+		Koordinate neuKoord;
+		LinkedList<Koordinate> legalerWegZweig;
+		
+		//Wenn kein Stein auf der aktuellen Koordinate ist, ist Gegner schlagbar
+		if(!(eigene.getStones().contains(bufEigeneStone) || gegner.getStones().contains(bufGegnerStone))){
+			if(koordinatenEingabeCheck(aktKoord.toString() + aktKoord.toString())){
+				legalerWeg.add(aktKoord);
+				alleLegalenWege.add(legalerWeg);
+			}
+			
+			//Prüfe nun, ob von der aktuellen Position aus weitere Gegner schlagbar sind
+			neuKoord = new Koordinate(aktKoord.getZahl() - 1, (char)(aktKoord.getBuchstabe() - 1));
+			//Falls man nicht von links oben kam...
+			if(!legalerWeg.contains(neuKoord)){
+				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+				//...und dort ein Gegner ist
+				if(gegner.getStones().contains(bufGegnerStone)){
+					//Kopiere die Liste 'legalerWeg' und benutze Rekursion
+					legalerWegZweig = copy(legalerWeg);
+					legalerWegZweig.add(neuKoord);
+					neuKoord = new Koordinate(aktKoord.getZahl() - 2, (char)(aktKoord.getBuchstabe() - 2));
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, neuKoord, legalerWegZweig, alleLegalenWege);
+				}
+			}
+			
+			neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char)(aktKoord.getBuchstabe() + 1));
+			//Falls man nicht von rechts unten kam...
+			if(!legalerWeg.contains(neuKoord)){
+				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+				//...und dort ein Gegner ist
+				if(gegner.getStones().contains(bufGegnerStone)){
+					//Kopiere die Liste 'legalerWeg' und benutze Rekursion
+					legalerWegZweig = copy(legalerWeg);
+					legalerWegZweig.add(neuKoord);
+					neuKoord = new Koordinate(aktKoord.getZahl() + 2, (char)(aktKoord.getBuchstabe() + 2));
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, neuKoord, legalerWegZweig, alleLegalenWege);
+				}
+			}
+			
+			neuKoord = new Koordinate(aktKoord.getZahl() - 1, (char)(aktKoord.getBuchstabe() + 1));
+			//Falls man nicht von rechts oben kam...
+			if(!legalerWeg.contains(neuKoord)){
+				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+				//...und dort ein Gegner ist
+				if(gegner.getStones().contains(bufGegnerStone)){
+					//Kopiere die Liste 'legalerWeg' und benutze Rekursion
+					legalerWegZweig = copy(legalerWeg);
+					legalerWegZweig.add(neuKoord);
+					neuKoord = new Koordinate(aktKoord.getZahl() - 2, (char)(aktKoord.getBuchstabe() + 2));
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, neuKoord, legalerWegZweig, alleLegalenWege);
+				}
+			}
+			
+			neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char)(aktKoord.getBuchstabe() - 1));
+			//Falls man nicht von links unten kam...
+			if(!legalerWeg.contains(neuKoord)){
+				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+				//...und dort ein Gegner ist
+				if(gegner.getStones().contains(bufGegnerStone)){
+					//Kopiere die Liste 'legalerWeg' und benutze Rekursion
+					legalerWegZweig = copy(legalerWeg);
+					legalerWegZweig.add(neuKoord);
+					neuKoord = new Koordinate(aktKoord.getZahl() + 2, (char)(aktKoord.getBuchstabe() - 2));
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, neuKoord, legalerWegZweig, alleLegalenWege);
+				}
+			}
+		}
+		
+		return alleLegalenWege;
+	}
+	
+	/* Erzeugt eine tiefe Kopie einer Liste aus Koordinaten.
+	 * 
+	 * @param koordinatenListe Die Liste, die kopiert wird
+	 * @return kopierteListe Die Kopie
+	 */
+	private LinkedList<Koordinate> copy(LinkedList<Koordinate> koordinatenListe){
+		LinkedList<Koordinate> kopierteListe = new LinkedList<Koordinate>();
+		
+		for(Koordinate buf : koordinatenListe){
+			kopierteListe.addLast(buf);
+		}
+		
+		return kopierteListe;
+	}
+	
 	/*
 	 * Wählt den in der Eingabe spezifizierten Stein aus, 
-	 * falls vorhanden, und versucht ihn über die ziehe()
-	 * Funktion des Steins zu bewegen.
+	 * erstellt eine Liste aller möglichen Züge des Steins.
+	 * Der Stein wird bewegt (falls möglich) und die Gegner auf seiner
+	 * Bahn werden gelöscht.
 	 * 
 	 * @param spielerEingabe Die vom Spieler eingegeben Koordinaten
 	 * @return rundeGueltig Wahr, wenn die Eingabe umgesetzt werden konnte
 	 */
 	private boolean waehleSteinUndZiehe(String spielerEingabe){
+		LinkedList<LinkedList<Koordinate>> alleLegalenWege;
+		LinkedList<Koordinate> zugWeg = null;
+		Spieler aktuellerSpieler;
+		Spieler aktuellerGegner;
 		boolean rundeGueltig = true;
 		int indexBuf;
 		Koordinate vonPos;
 		Koordinate nachPos;
-		Stone vonStein;
-//		Stone nachStein;
-//		Bewegungskoordinate zieheStein;
+		Stone bufStein;
+
 		
 		vonPos = new Koordinate((int)(spielerEingabe.charAt(1) - 48), 
-						 spielerEingabe.charAt(0));
+				 spielerEingabe.charAt(0));
 		nachPos = new Koordinate((int)(spielerEingabe.charAt(3) - 48),
-			  			 spielerEingabe.charAt(2));
+	  			 spielerEingabe.charAt(2));
 		
+		alleLegalenWege = erzeugeGueltigeWege(spielerEingabe);
 		
-		//zieheStein = new Bewegungskoordinate(vonPos, nachPos);							
+		//Gehe die Liste alleLegalenWege durch...
+		for(LinkedList<Koordinate> aktuellerWeg : alleLegalenWege){
+			//...und suche nach einer Liste, welche die Koordinaten der Eingabe beinhaltet
+			if(aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)){
+				zugWeg = aktuellerWeg;
+			}
+		}
 		
 		if(player1turn){
-			vonStein = new Stone(spieler1.getFarbe(), vonPos);
-			//nachStein = new Stone(spieler1.getFarbe(), nachPos);
-			indexBuf = spieler1.getStones().indexOf(vonStein);
-			
-			if(indexBuf != -1){	
-				rundeGueltig = spieler1.getStones().get(indexBuf).
-						ziehen(nachPos, this.player1turn, spieler1, spieler2);
-			}
+			aktuellerSpieler = spieler1;
+			aktuellerGegner = spieler2;
 		}else{
-			vonStein = new Stone(spieler2.getFarbe(), vonPos);
-			//nachStein = new Stone(spieler2.getFarbe(), nachPos);
-			indexBuf = spieler2.getStones().indexOf(vonStein);
+			aktuellerSpieler = spieler2;
+			aktuellerGegner = spieler1;
+		}
 		
-			if(indexBuf != -1){
-				rundeGueltig = spieler2.getStones().get(indexBuf).
-						ziehen(nachPos, this.player1turn, spieler1, spieler2);
+		//Wenn kein gültiger Zug eingegeben wurde
+		if(zugWeg == null){
+			rundeGueltig = false;
+		}else{
+			//Wenn Gegner im Weg sind
+			if(zugWeg.size() > 2){
+				//Jede Zweite Koordinate in 'zugWeg' ist ein Gegner und wird gelöscht
+				for(int i = 1; i < zugWeg.size(); i += 2){
+					bufStein = new Stone(aktuellerGegner.getFarbe(), zugWeg.get(i));
+					aktuellerGegner.getStones().remove(bufStein);
+					System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe() 
+							+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
+				}
 			}
-		}		
+			//Ziehe den eigenen Stein an die Zielposition
+			bufStein = new Stone(aktuellerSpieler.getFarbe(), vonPos);
+			indexBuf = aktuellerSpieler.getStones().indexOf(bufStein);
+			bufStein = aktuellerSpieler.getStones().get(indexBuf);
+			bufStein.ziehen(nachPos);
+		}
+		
 		return rundeGueltig;
 	}
 	
