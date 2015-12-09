@@ -1,17 +1,17 @@
 package Wrapper;
 
-public class Gruppe3 {
+public class Gruppe3 implements GruppeX{
 	/**
 	 * Signalisiert dem jeweiligen Programm, das es den ersten Zug macht.
 	 */
-	void youAreFirst() {
+	public void youAreFirst() {
 
 	}
 
 	/**
 	 * Signalisiert dem jeweiligen Programm, dass es den zweiten Zug macht
 	 */
-	void youAreSecond() {
+	public void youAreSecond() {
 
 	}
 
@@ -22,7 +22,7 @@ public class Gruppe3 {
 	 * 
 	 * @return
 	 */
-	boolean isRunning() {
+	public boolean isRunning() {
 		return false;
 
 	}
@@ -34,7 +34,7 @@ public class Gruppe3 {
 	 * 
 	 * @return
 	 */
-	int whoWon() {
+	public int whoWon() {
 		return 0;
 
 	}
@@ -46,7 +46,8 @@ public class Gruppe3 {
 	 * @param zug
 	 * @return
 	 */
-	boolean takeYourMove(String zug) {
+	public boolean takeYourMove(String hisMove) {
+		
 		return false;
 	}
 
@@ -55,7 +56,7 @@ public class Gruppe3 {
 	 * 
 	 * @return
 	 */
-	String getMyMove() {
+	public String getMyMove() {
 		return null;
 
 	}
@@ -66,7 +67,7 @@ public class Gruppe3 {
 	 * 
 	 * @return
 	 */
-	boolean canYouMove() {
+	public boolean canYouMove() {
 		return false;
 
 	}
@@ -77,7 +78,7 @@ public class Gruppe3 {
 	 * 
 	 * @return
 	 */
-	boolean canIMove() {
+	public boolean canIMove() {
 		return false;
 
 	}
@@ -86,7 +87,9 @@ public class Gruppe3 {
 	 * druckt mit System.out.println()-Kommandos das Spielbrett im aktuellen
 	 * Zustand auf der Konsole aus
 	 */
-	void printBoard() {
+	public void printBoard() {
 
 	}
+
+
 }
