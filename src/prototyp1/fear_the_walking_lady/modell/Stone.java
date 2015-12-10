@@ -1,10 +1,8 @@
 package prototyp1.fear_the_walking_lady.modell;
 
-import java.util.LinkedList;
-
 public class Stone {
-	private String color;
-	private Koordinate koordinate;
+	protected String color;
+	protected Koordinate koordinate;
 	
 	//Konstruktor
 	public Stone(String color, Koordinate koordinate){
@@ -48,8 +46,8 @@ public class Stone {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
 		Stone other = (Stone) obj;
 		if (color == null) {
 			if (other.color != null)

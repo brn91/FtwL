@@ -91,7 +91,7 @@ public class GameController {
 
 			} while ((!spielzugGueltig) && (System.currentTimeMillis() < zeitBuf));
 			// Wechsle den Spieler
-			player1turn ^= true;
+			this.player1turn ^= true;
 		} while (spielLaeuft(spielerEingabe));
 
 	}
@@ -101,10 +101,6 @@ public class GameController {
 	 */
 	public void runGameHvsC() {
 
-	}
-
-	public boolean ueberpruefeObSteinZuDame() {
-		return false;
 	}
 
 	/**
@@ -147,7 +143,7 @@ public class GameController {
 		default:
 			if (koordinatenEingabeCheck(spielerEingabe) == true) {
 				if (GameController.activateCheats && spielerEingabe.length() == 3) {
-					cheatStoneToLady(new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0)));
+					stoneToLady(new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0)));
 				} else {
 					rundeGueltig = waehleSteinUndZiehe(spielerEingabe);
 				}
@@ -211,33 +207,27 @@ public class GameController {
 	 * @param koordinate
 	 *            Die Koordinate des Steins
 	 */
-	private void cheatStoneToLady(Koordinate koordinate) {
+	private void stoneToLady(Koordinate koordinate) {
+		Spieler aktuellerSpieler;
 		Stone indexChecker;
 		Lady neueLady;
 		int indexBuf;
 
-		if (player1turn) {
-			neueLady = new Lady(spieler1.getFarbe(), koordinate);
-			indexChecker = new Stone(spieler1.getFarbe(), koordinate);
-			indexBuf = spieler1.getStones().indexOf(indexChecker);
-
-			// Wenn Stein an der Position ist
-			if (indexBuf != -1) {
-				spieler1.getStones().remove(indexBuf);
-				spieler1.getStones().add(neueLady);
-
-			}
+		if (this.player1turn) {
+			aktuellerSpieler = this.spieler1;
 		} else {
-			neueLady = new Lady(spieler2.getFarbe(), koordinate);
-			indexChecker = new Stone(spieler2.getFarbe(), koordinate);
-			indexBuf = spieler2.getStones().indexOf(indexChecker);
+			aktuellerSpieler = this.spieler2;
+		}
+		
+		neueLady = new Lady(aktuellerSpieler.getFarbe(), koordinate);
+		indexChecker = new Stone(aktuellerSpieler.getFarbe(), koordinate);
+		indexBuf = aktuellerSpieler.getStones().indexOf(indexChecker);
 
-			// Wenn Stein an der Position ist
-			if (indexBuf != -1) {
-				spieler2.getStones().remove(indexBuf);
-				spieler2.getStones().add(neueLady);
+		// Wenn Stein an der Position ist
+		if (indexBuf != -1) {
+			aktuellerSpieler.getStones().remove(indexBuf);
+			aktuellerSpieler.getStones().add(neueLady);
 
-			}
 		}
 	}
 
@@ -261,15 +251,16 @@ public class GameController {
 		Koordinate vonPos;
 		Koordinate aktKoord;
 		int richtung;
+		int bufIndex;
 
 		vonPos = new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0));
 
-		if (player1turn) {
-			gegner = spieler2;
-			eigene = spieler1;
+		if (this.player1turn) {
+			gegner = this.spieler2;
+			eigene = this.spieler1;
 		} else {
-			gegner = spieler1;
-			eigene = spieler2;
+			gegner = this.spieler1;
+			eigene = this.spieler2;
 		}
 
 		// Die Farbe des Spielers entscheidet darüber ob die Steine nach
@@ -282,52 +273,174 @@ public class GameController {
 		}
 
 		// Teste das Feld vorne rechts von der Quellkoordinate! aus gesehen
-		aktKoord = new Koordinate(vonPos.getZahl() + richtung, (char) (vonPos.getBuchstabe() + richtung));
+		aktKoord = new Koordinate(vonPos.getZahl() + richtung, 
+				(char) (vonPos.getBuchstabe() + richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
 		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
 		legalerWeg = new LinkedList<Koordinate>();
+		legalerWeg.add(vonPos);
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
-			// Wenn ein Gegner auf dem zu testenden Feld (aktKoord) ist
+			// Wenn das zu testende Feld (aktKoord) frei ist
+			if (eigene.getStones().contains(bufEigeneStone) == false) {
+				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
+				//Wenn der zu ziehende Stein eine Lady ist
+				if(eigene.getStones().get(bufIndex) instanceof Lady){
+					do{
+						legalerWeg.add(aktKoord);
+						alleLegalenWege.add(legalerWeg);
+						legalerWeg = copy(legalerWeg);
+						aktKoord = new Koordinate(aktKoord.getZahl() + richtung,
+								(char) (aktKoord.getBuchstabe() + richtung));
+						bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+						bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+					//Solange die nächste Koordinate im Feld ist und keine Steine enthält
+					}while(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString()) &&
+							!gegner.getStones().contains(bufGegnerStone) &&
+							!eigene.getStones().contains(bufEigeneStone));
+				//Wenn der zu ziehende Stein KEINE Lady ist
+				}else{
+					legalerWeg.add(aktKoord);
+					alleLegalenWege.add(legalerWeg);
+				}
+			}
+			// Wenn ein Gegner auf dem aktuell zu testenden Feld (aktKoord) ist
 			if (gegner.getStones().contains(bufGegnerStone)) {
-				legalerWeg.add(vonPos);
 				legalerWeg.add(aktKoord);
-				aktKoord = new Koordinate(vonPos.getZahl() + (richtung * 2),
-						(char) (vonPos.getBuchstabe() + (richtung * 2)));
+				aktKoord = new Koordinate(aktKoord.getZahl() + richtung,
+						(char) (aktKoord.getBuchstabe() + richtung));
 				// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 				if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
 				}
-				// Sonst, wenn das zu testende Feld (aktKoord) frei ist
-			} else if (eigene.getStones().contains(bufEigeneStone) == false) {
-				legalerWeg.add(vonPos);
-				legalerWeg.add(aktKoord);
-				alleLegalenWege.add(legalerWeg);
 			}
 		}
-
+		
 		// Teste das Feld vorne links von der Quellkoordinate! aus gesehen
-		aktKoord = new Koordinate(vonPos.getZahl() + richtung, (char) (vonPos.getBuchstabe() - richtung));
+		aktKoord = new Koordinate(vonPos.getZahl() + richtung, 
+				(char) (vonPos.getBuchstabe() - richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
 		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
 		legalerWeg = new LinkedList<Koordinate>();
+		legalerWeg.add(vonPos);
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
-			// Wenn ein Gegner auf dem zu testendem Feld (aktKoord) ist
+			// Wenn das zu testende Feld (aktKoord) frei ist
+			if (eigene.getStones().contains(bufEigeneStone) == false) {
+				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
+				//Wenn der zu ziehende Stein eine Lady ist
+				if(eigene.getStones().get(bufIndex) instanceof Lady){
+					do{
+						legalerWeg.add(aktKoord);
+						alleLegalenWege.add(legalerWeg);
+						legalerWeg = copy(legalerWeg);
+						aktKoord = new Koordinate(aktKoord.getZahl() + richtung,
+								(char) (aktKoord.getBuchstabe() - richtung));
+						bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+						bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+					//Solange die nächste Koordinate im Feld ist und keine Steine enthält
+					}while(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString()) &&
+							!gegner.getStones().contains(bufGegnerStone) &&
+							!eigene.getStones().contains(bufEigeneStone));
+				//Wenn der zu ziehende Stein KEINE Lady ist
+				}else{
+					legalerWeg.add(aktKoord);
+					alleLegalenWege.add(legalerWeg);
+				}
+			}
+			// Wenn ein Gegner auf dem aktuell zu testenden Feld (aktKoord) ist
 			if (gegner.getStones().contains(bufGegnerStone)) {
-				legalerWeg.add(vonPos);
 				legalerWeg.add(aktKoord);
-				aktKoord = new Koordinate(vonPos.getZahl() + (richtung * 2),
-						(char) (vonPos.getBuchstabe() - (richtung * 2)));
+				aktKoord = new Koordinate(aktKoord.getZahl() + richtung,
+						(char) (aktKoord.getBuchstabe() - richtung));
 				// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 				if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
 				}
-				// Sonst, wenn das zu testende Feld (aktKoord) frei ist
-			} else if (eigene.getStones().contains(bufEigeneStone) == false) {
-				legalerWeg.add(vonPos);
+			}
+		}
+		
+		// Teste das Feld hinten rechts von der Quellkoordinate! aus gesehen
+		aktKoord = new Koordinate(vonPos.getZahl() - richtung, 
+				(char) (vonPos.getBuchstabe() + richtung));
+		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+		legalerWeg = new LinkedList<Koordinate>();
+		legalerWeg.add(vonPos);
+		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
+			// Wenn das zu testende Feld (aktKoord) frei ist
+			if (eigene.getStones().contains(bufEigeneStone) == false) {
+				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
+				//Wenn der zu ziehende Stein eine Lady ist
+				if(eigene.getStones().get(bufIndex) instanceof Lady){
+					do{
+						legalerWeg.add(aktKoord);
+						alleLegalenWege.add(legalerWeg);
+						legalerWeg = copy(legalerWeg);
+						aktKoord = new Koordinate(aktKoord.getZahl() - richtung,
+								(char) (aktKoord.getBuchstabe() + richtung));
+						bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+						bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+					//Solange die nächste Koordinate im Feld ist und keine Steine enthält
+					}while(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString()) &&
+							!gegner.getStones().contains(bufGegnerStone) &&
+							!eigene.getStones().contains(bufEigeneStone));
+				}
+			}
+			// Wenn ein Gegner auf dem aktuell zu testenden Feld (aktKoord) ist
+			if (gegner.getStones().contains(bufGegnerStone)) {
 				legalerWeg.add(aktKoord);
-				alleLegalenWege.add(legalerWeg);
+				aktKoord = new Koordinate(aktKoord.getZahl() - richtung,
+						(char) (aktKoord.getBuchstabe() + richtung));
+				// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+				if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+				}
+			}
+		}
+		
+		// Teste das Feld hinten links von der Quellkoordinate! aus gesehen
+		aktKoord = new Koordinate(vonPos.getZahl() - richtung, 
+				(char) (vonPos.getBuchstabe() - richtung));
+		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+		bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+		legalerWeg = new LinkedList<Koordinate>();
+		legalerWeg.add(vonPos);
+		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
+			// Wenn das zu testende Feld (aktKoord) frei ist
+			if (eigene.getStones().contains(bufEigeneStone) == false) {
+				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
+				//Wenn der zu ziehende Stein eine Lady ist
+				if(eigene.getStones().get(bufIndex) instanceof Lady){
+					do{
+						legalerWeg.add(aktKoord);
+						alleLegalenWege.add(legalerWeg);
+						legalerWeg = copy(legalerWeg);
+						aktKoord = new Koordinate(aktKoord.getZahl() - richtung,
+								(char) (aktKoord.getBuchstabe() - richtung));
+						bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
+						bufEigeneStone = new Stone(eigene.getFarbe(), aktKoord);
+					//Solange die nächste Koordinate im Feld ist und keine Steine enthält
+					}while(koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString()) &&
+							!gegner.getStones().contains(bufGegnerStone) &&
+							!eigene.getStones().contains(bufEigeneStone));
+				}
+			}
+			// Wenn ein Gegner auf dem aktuell zu testenden Feld (aktKoord) ist
+			if (gegner.getStones().contains(bufGegnerStone)) {
+				legalerWeg.add(aktKoord);
+				aktKoord = new Koordinate(aktKoord.getZahl() - richtung,
+						(char) (aktKoord.getBuchstabe() - richtung));
+				// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
+				if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
+					alleLegalenWege = pruefeObGegnerSchlagbar(
+							gegner, eigene, aktKoord, legalerWeg, alleLegalenWege);
+				}
 			}
 		}
 
@@ -476,51 +589,82 @@ public class GameController {
 		Koordinate nachPos;
 		Stone bufStein;
 
+		if (this.player1turn) {
+			aktuellerSpieler = this.spieler1;
+			aktuellerGegner = this.spieler2;
+		} else {
+			aktuellerSpieler = this.spieler2;
+			aktuellerGegner = this.spieler1;
+		}
+		
 		vonPos = new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0));
 		nachPos = new Koordinate((int) (spielerEingabe.charAt(3) - 48), spielerEingabe.charAt(2));
+		bufStein = new Stone(aktuellerSpieler.getFarbe(), vonPos);
+		indexBuf = aktuellerSpieler.getStones().indexOf(bufStein);
+		
+		//Wenn der zu Ziehende Stein existiert
+		if(indexBuf != -1){
+			bufStein = aktuellerSpieler.getStones().get(indexBuf);
+			
+			alleLegalenWege = erzeugeGueltigeWege(spielerEingabe);
 
-		alleLegalenWege = erzeugeGueltigeWege(spielerEingabe);
-
-		// Gehe die Liste alleLegalenWege durch...
-		for (LinkedList<Koordinate> aktuellerWeg : alleLegalenWege) {
-			// ...und suche nach einer Liste, welche die Koordinaten der Eingabe
-			// beinhaltet
-			if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
-				zugWeg = aktuellerWeg;
+			// Gehe die Liste alleLegalenWege durch...
+			for (LinkedList<Koordinate> aktuellerWeg : alleLegalenWege) {
+				// ...und suche nach einer Liste, welche die Koordinaten der Eingabe
+				// beinhaltet
+				if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
+					zugWeg = aktuellerWeg;
+				}
 			}
 		}
 
-		if (player1turn) {
-			aktuellerSpieler = spieler1;
-			aktuellerGegner = spieler2;
-		} else {
-			aktuellerSpieler = spieler2;
-			aktuellerGegner = spieler1;
-		}
-
-		// Wenn kein gültiger Zug eingegeben wurde
+		// Wenn kein gültiger Weg existiert
 		if (zugWeg == null) {
 			rundeGueltig = false;
 		} else {
-			// Wenn Gegner im Weg sind
-			if (zugWeg.size() > 2) {
-				// Jede Zweite Koordinate in 'zugWeg' ist ein Gegner und wird
-				// gelöscht
-				for (int i = 1; i < zugWeg.size(); i += 2) {
-					bufStein = new Stone(aktuellerGegner.getFarbe(), zugWeg.get(i));
-					aktuellerGegner.getStones().remove(bufStein);
+			// Gehe den gesamten Weg ab
+			for (int i = 1; i < zugWeg.size(); i ++) {
+				bufStein = new Stone(aktuellerGegner.getFarbe(), zugWeg.get(i));
+				
+				if(ueberpruefeObSteinZuDame(new Stone(aktuellerSpieler.getFarbe(), zugWeg.get(i)))){
+					stoneToLady(zugWeg.get(i));
+				}
+				
+				// Wenn die aktuelle Koordinate einen Gegner beinhaltet, entferne ihn
+				if(aktuellerGegner.getStones().remove(bufStein)){
 					System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe()
 							+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
 				}
 			}
 			// Ziehe den eigenen Stein an die Zielposition
-			bufStein = new Stone(aktuellerSpieler.getFarbe(), vonPos);
-			indexBuf = aktuellerSpieler.getStones().indexOf(bufStein);
-			bufStein = aktuellerSpieler.getStones().get(indexBuf);
-			bufStein.ziehen(nachPos);
+			aktuellerSpieler.getStones().get(indexBuf).ziehen(nachPos);
 		}
 
 		return rundeGueltig;
+	}
+	
+	/**
+	 * Überprüft ob ein Stein auf einem Feld ist, auf dem er zur Lady wird
+	 * 
+	 * @param stein Der zu testende Stein
+	 * @return rueckgabe Wahr, wenn Stein zur Lady wird
+	 */
+	public boolean ueberpruefeObSteinZuDame(Stone stein) {
+		boolean rueckgabe = false;
+		
+		if(stein.getColor() == "Weiß"){
+			// Wenn der weiße Spieler das Ende des Felds erreicht hat, mache ihn zur Lady
+			if(stein.getKoordinate().getZahl() == 1){
+				rueckgabe = true;
+			}
+		}else{
+			// Wenn der schwarze Spieler das Ende des Felds erreicht hat, mache ihn zur Lady
+			if(stein.getKoordinate().getZahl() == Koordinate.MAX_Z_K){
+				rueckgabe = true;
+			}
+		}
+		
+		return rueckgabe;
 	}
 
 	public boolean spielLaeuft(String spielerEingabe) {
@@ -536,14 +680,14 @@ public class GameController {
 		Random rand = new Random();
 		int r;
 
-		if (player1turn) {
-			r = rand.nextInt(spieler1.getStones().size() - 1);
-			spieler1.getStones().remove(r);
-			spieler1.printStones();
+		if (this.player1turn) {
+			r = rand.nextInt(this.spieler1.getStones().size() - 1);
+			this.spieler1.getStones().remove(r);
+			this.spieler1.printStones();
 		} else {
-			r = rand.nextInt(spieler2.getStones().size() - 1);
-			spieler2.getStones().remove(r);
-			spieler2.printStones();
+			r = rand.nextInt(this.spieler2.getStones().size() - 1);
+			this.spieler2.getStones().remove(r);
+			this.spieler2.printStones();
 		}
 	}
 

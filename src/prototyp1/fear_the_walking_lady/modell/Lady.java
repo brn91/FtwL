@@ -6,8 +6,13 @@ public class Lady extends Stone{
 		super(color, koordinate);
 	}
 	
-	public void ziehen(Koordinate bewegungskoordinate){
-		
+	/**
+	 * Setzt die Lady an die Zielkoordinate
+	 *  
+	 * @param zielKoord Die neue Koordinate
+	 */
+	public void ziehen(Koordinate zielKoord){
+		this.koordinate = zielKoord;
 	}
 	
 	public void schlagen(Stone stoneGegner){
