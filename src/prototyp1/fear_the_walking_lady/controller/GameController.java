@@ -580,10 +580,12 @@ public class GameController {
 	 */
 	private boolean waehleSteinUndZiehe(String spielerEingabe) {
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege;
+		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege;
 		LinkedList<Koordinate> zugWeg = null;
 		Spieler aktuellerSpieler;
 		Spieler aktuellerGegner;
 		boolean rundeGueltig = true;
+		boolean schlagpflichtBeachtet = false;
 		int indexBuf;
 		Koordinate vonPos;
 		Koordinate nachPos;
@@ -607,41 +609,133 @@ public class GameController {
 			bufStein = aktuellerSpieler.getStones().get(indexBuf);
 			
 			alleLegalenWege = erzeugeGueltigeWege(spielerEingabe);
-
+			alleSchlagpflichtWege = erzeugeSchlagpflichtWege();
+			
+			// Wenn Schlagpflichten bestehen
+			if(alleSchlagpflichtWege.size() > 0){
+				// Gehe die Liste alleSchalgpflichtWege durch...
+				for (LinkedList<Koordinate> aktuellerWeg : alleSchlagpflichtWege) {
+					// ...und suche nach einer Liste, welche die Koordinaten der Eingabe beinhaltet
+					if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
+						schlagpflichtBeachtet = true;
+					}
+				}
+			}else{
+				schlagpflichtBeachtet = true;
+			}
+			
 			// Gehe die Liste alleLegalenWege durch...
 			for (LinkedList<Koordinate> aktuellerWeg : alleLegalenWege) {
 				// ...und suche nach einer Liste, welche die Koordinaten der Eingabe
-				// beinhaltet
 				if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
 					zugWeg = aktuellerWeg;
 				}
 			}
-		}
 
-		// Wenn kein gültiger Weg existiert
-		if (zugWeg == null) {
-			rundeGueltig = false;
-		} else {
-			// Gehe den gesamten Weg ab
-			for (int i = 1; i < zugWeg.size(); i ++) {
-				bufStein = new Stone(aktuellerGegner.getFarbe(), zugWeg.get(i));
-				
-				if(ueberpruefeObSteinZuDame(new Stone(aktuellerSpieler.getFarbe(), zugWeg.get(i)))){
-					stoneToLady(zugWeg.get(i));
+			// Wenn kein gültiger Weg existiert
+			if (zugWeg == null) {
+				rundeGueltig = false;
+			} else {
+				// Gehe den gesamten Weg ab
+				for (int i = 1; i < zugWeg.size(); i ++) {
+					bufStein = new Stone(aktuellerGegner.getFarbe(), zugWeg.get(i));
+					
+					if(ueberpruefeObSteinZuDame(new Stone(aktuellerSpieler.getFarbe(), zugWeg.get(i)))){
+						stoneToLady(zugWeg.get(i));
+					}
+					
+					// Wenn die aktuelle Koordinate einen Gegner beinhaltet, entferne ihn
+					if(aktuellerGegner.getStones().remove(bufStein)){
+						System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe()
+								+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
+					}
 				}
 				
-				// Wenn die aktuelle Koordinate einen Gegner beinhaltet, entferne ihn
-				if(aktuellerGegner.getStones().remove(bufStein)){
-					System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe()
-							+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
+				// Wenn die Schlagpflicht nicht beachtet wurde
+				if(!schlagpflichtBeachtet){
+					bufStein = new Stone(aktuellerSpieler.getFarbe(), 
+							alleSchlagpflichtWege.getFirst().getFirst());
+					// Wenn der gezogene Stein in der Schlagpflicht war, lösche ihn...
+					if(aktuellerSpieler.getStones().get(indexBuf).equals(bufStein)){
+						aktuellerSpieler.getStones().remove(bufStein);
+						System.out.println("Der Stein auf " + bufStein.getKoordinate().toString() 
+								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");
+					// ...sonst ziehe den Stein und lösche den ersten schlagpflichtigen Stein
+					}else{
+						aktuellerSpieler.getStones().remove(bufStein);
+						System.out.println("Der Stein auf " + bufStein.getKoordinate().toString() 
+								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");
+						// Ziehe den eigenen Stein an die Zielposition
+						aktuellerSpieler.getStones().get(indexBuf-1).ziehen(nachPos);
+					}
+				}else{
+					// Ziehe den eigenen Stein an die Zielposition
+					aktuellerSpieler.getStones().get(indexBuf).ziehen(nachPos);
 				}
 			}
-			// Ziehe den eigenen Stein an die Zielposition
-			aktuellerSpieler.getStones().get(indexBuf).ziehen(nachPos);
 		}
 
 		return rundeGueltig;
 	}
+	
+	/**
+	 * Erzeugt alle Spielzugmöglichkeiten, bei der mindestens 1 Stein 
+	 * des Gegners geschlagen wird. Diese Methode dient als Basis für
+	 * das Überprüfen der Einhaltung der Schlagpflicht.
+	 * 
+	 * @return alleSchlagpflichtWege Gültige Wege für den Schlagpflichtabgleich
+	 */
+	private LinkedList<LinkedList<Koordinate>> erzeugeSchlagpflichtWege(){
+		Spieler aktuellerSpieler;
+		Spieler aktuellerGegner;
+		Stone gegnerStein;
+		boolean gueltigerWeg;
+		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWegeBuf = 
+				new LinkedList<LinkedList<Koordinate>>();
+		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege = 
+				new LinkedList<LinkedList<Koordinate>>();
+		LinkedList<Koordinate> aktuellerWeg;
+		
+		if(this.player1turn){
+			aktuellerSpieler = spieler1;
+			aktuellerGegner = spieler2;
+		}else{
+			aktuellerSpieler = spieler2;
+			aktuellerGegner = spieler1;
+		}
+		
+		//Erzeugt für jeden Stein des aktuellen Spielers alle gültigen Wege
+		for(int i = 0; i < aktuellerSpieler.getStones().size(); i++){
+			alleSchlagpflichtWegeBuf.addAll(erzeugeGueltigeWege(
+					aktuellerSpieler.getStones().get(i).getKoordinate().toString()));
+		}
+		
+		// Für jeden Weg...
+		for(int i = 0; i < alleSchlagpflichtWegeBuf.size(); i++){
+			gueltigerWeg = false;
+			aktuellerWeg = alleSchlagpflichtWegeBuf.get(i);
+			
+			// ...gehe den gesamten Weg ab und...
+			for (int j = 1; j < aktuellerWeg.size(); j ++) {
+				gegnerStein = new Stone(aktuellerGegner.getFarbe(), aktuellerWeg.get(j));
+				
+				// ...wenn die aktuelle Koordinate einen Gegner beinhaltet...
+				if(aktuellerGegner.getStones().contains(gegnerStein)){
+					// ...markiere den Weg als gültig
+					gueltigerWeg = true;
+				}					
+			}
+			
+			// Wenn der aktuelle Weg gültig ist, füge ihn zur Liste hinzu
+			if(gueltigerWeg){
+				alleSchlagpflichtWege.add(aktuellerWeg);
+			}
+		}
+			
+		return alleSchlagpflichtWege;
+	}
+	
+	
 	
 	/**
 	 * Überprüft ob ein Stein auf einem Feld ist, auf dem er zur Lady wird
