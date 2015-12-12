@@ -272,7 +272,7 @@ public class GameController {
 			richtung = -1;
 		}
 
-		// Teste das Feld vorne rechts von der Quellkoordinate! aus gesehen
+		// Teste das Feld vorne links von der Quellkoordinate! aus gesehen
 		aktKoord = new Koordinate(vonPos.getZahl() + richtung, 
 				(char) (vonPos.getBuchstabe() + richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
@@ -282,7 +282,8 @@ public class GameController {
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
 			// Wenn das zu testende Feld (aktKoord) frei ist
-			if (eigene.getStones().contains(bufEigeneStone) == false) {
+			if (!gegner.getStones().contains(bufGegnerStone) && 
+					!eigene.getStones().contains(bufEigeneStone)) {
 				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
 				//Wenn der zu ziehende Stein eine Lady ist
 				if(eigene.getStones().get(bufIndex) instanceof Lady){
@@ -317,7 +318,7 @@ public class GameController {
 			}
 		}
 		
-		// Teste das Feld vorne links von der Quellkoordinate! aus gesehen
+		// Teste das Feld vorne rechts von der Quellkoordinate! aus gesehen
 		aktKoord = new Koordinate(vonPos.getZahl() + richtung, 
 				(char) (vonPos.getBuchstabe() - richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
@@ -327,7 +328,8 @@ public class GameController {
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
 			// Wenn das zu testende Feld (aktKoord) frei ist
-			if (eigene.getStones().contains(bufEigeneStone) == false) {
+			if (!gegner.getStones().contains(bufGegnerStone) && 
+					!eigene.getStones().contains(bufEigeneStone)) {
 				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
 				//Wenn der zu ziehende Stein eine Lady ist
 				if(eigene.getStones().get(bufIndex) instanceof Lady){
@@ -362,7 +364,7 @@ public class GameController {
 			}
 		}
 		
-		// Teste das Feld hinten rechts von der Quellkoordinate! aus gesehen
+		// Teste das Feld hinten links von der Quellkoordinate! aus gesehen
 		aktKoord = new Koordinate(vonPos.getZahl() - richtung, 
 				(char) (vonPos.getBuchstabe() + richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
@@ -372,7 +374,8 @@ public class GameController {
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
 			// Wenn das zu testende Feld (aktKoord) frei ist
-			if (eigene.getStones().contains(bufEigeneStone) == false) {
+			if (!gegner.getStones().contains(bufGegnerStone) && 
+					!eigene.getStones().contains(bufEigeneStone)) {
 				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
 				//Wenn der zu ziehende Stein eine Lady ist
 				if(eigene.getStones().get(bufIndex) instanceof Lady){
@@ -403,7 +406,7 @@ public class GameController {
 			}
 		}
 		
-		// Teste das Feld hinten links von der Quellkoordinate! aus gesehen
+		// Teste das Feld hinten rechts von der Quellkoordinate! aus gesehen
 		aktKoord = new Koordinate(vonPos.getZahl() - richtung, 
 				(char) (vonPos.getBuchstabe() - richtung));
 		bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
@@ -413,7 +416,8 @@ public class GameController {
 		// Wenn das zu testende Feld (aktKoord) im Spielfeld liegt
 		if (koordinatenEingabeCheck(vonPos.toString() + aktKoord.toString())) {
 			// Wenn das zu testende Feld (aktKoord) frei ist
-			if (eigene.getStones().contains(bufEigeneStone) == false) {
+			if (!gegner.getStones().contains(bufGegnerStone) && 
+					!eigene.getStones().contains(bufEigeneStone)) {
 				bufIndex = eigene.getStones().indexOf(new Stone(eigene.getFarbe(), vonPos));			
 				//Wenn der zu ziehende Stein eine Lady ist
 				if(eigene.getStones().get(bufIndex) instanceof Lady){
@@ -626,7 +630,7 @@ public class GameController {
 			
 			// Gehe die Liste alleLegalenWege durch...
 			for (LinkedList<Koordinate> aktuellerWeg : alleLegalenWege) {
-				// ...und suche nach einer Liste, welche die Koordinaten der Eingabe
+				// ...und suche nach einer Liste, welche die Koordinaten der Eingabe enthält
 				if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
 					zugWeg = aktuellerWeg;
 				}
