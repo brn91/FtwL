@@ -180,32 +180,28 @@ public class Spieler {
 	 * aller möglichen Züge des Steins. Der Stein wird bewegt (falls möglich)
 	 * und die Gegner auf seiner Bahn werden gelöscht.
 	 * 
-	 * @param spielerEingabe
-	 *            Die vom Spieler eingegeben Koordinaten
+	 * @param bewegung
+	 *            Welcher Stein wohin bewegt werden soll
 	 * @param gegner Der Gegner des Spielers
 	 * @return rundeGueltig Wahr, wenn die Eingabe umgesetzt werden konnte
 	 */
-	public boolean waehleSteinUndZiehe(String spielerEingabe, Spieler gegner) {
+	public boolean waehleSteinUndZiehe(Bewegungskoordinate bewegung, Spieler gegner) {
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege;
 		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege;
 		LinkedList<Koordinate> zugWeg = null;	
 		boolean rundeGueltig = true;
 		boolean schlagpflichtBeachtet = false;
 		int indexBuf;
-		Koordinate vonPos;
-		Koordinate nachPos;
 		Stone bufStein;
 		
-		vonPos = new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0));
-		nachPos = new Koordinate((int) (spielerEingabe.charAt(3) - 48), spielerEingabe.charAt(2));
-		bufStein = new Stone(this.getFarbe(), vonPos);
+		bufStein = new Stone(this.getFarbe(), bewegung.getStart());
 		indexBuf = this.getStones().indexOf(bufStein);
 		
 		//Wenn der zu Ziehende Stein existiert
 		if(indexBuf != -1){
 			bufStein = this.getStones().get(indexBuf);
 			
-			alleLegalenWege = erzeugeGueltigeWege(spielerEingabe, gegner);
+			alleLegalenWege = erzeugeGueltigeWege(bewegung, gegner);
 			alleSchlagpflichtWege = erzeugeSchlagpflichtWege(gegner);
 			
 			// Wenn Schlagpflichten bestehen
@@ -213,7 +209,8 @@ public class Spieler {
 				// Gehe die Liste alleSchalgpflichtWege durch...
 				for (LinkedList<Koordinate> aktuellerWeg : alleSchlagpflichtWege) {
 					// ...und suche nach einer Liste, welche die Koordinaten der Eingabe beinhaltet
-					if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
+					if (aktuellerWeg.getFirst().equals(bewegung.getStart()) && 
+							aktuellerWeg.getLast().equals(bewegung.getZiel())) {
 						schlagpflichtBeachtet = true;
 					}
 				}
@@ -224,7 +221,8 @@ public class Spieler {
 			// Gehe die Liste alleLegalenWege durch...
 			for (LinkedList<Koordinate> aktuellerWeg : alleLegalenWege) {
 				// ...und suche nach einer Liste, welche die Koordinaten der Eingabe enthält
-				if (aktuellerWeg.getFirst().equals(vonPos) && aktuellerWeg.getLast().equals(nachPos)) {
+				if (aktuellerWeg.getFirst().equals(bewegung.getStart()) && 
+						aktuellerWeg.getLast().equals(bewegung.getZiel())) {
 					zugWeg = aktuellerWeg;
 				}
 			}
@@ -263,11 +261,11 @@ public class Spieler {
 						System.out.println("Der Stein auf " + bufStein.getKoordinate().toString() 
 								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");
 						// Ziehe den eigenen Stein an die Zielposition
-						this.getStones().get(indexBuf-1).ziehen(nachPos);
+						this.getStones().get(indexBuf-1).ziehen(bewegung.getZiel());
 					}
 				}else{
 					// Ziehe den eigenen Stein an die Zielposition
-					this.getStones().get(indexBuf).ziehen(nachPos);
+					this.getStones().get(indexBuf).ziehen(bewegung.getZiel());
 				}
 			}
 		}else{
@@ -282,17 +280,15 @@ public class Spieler {
 	 * Jede dieser legalen Wege ist eine Liste der Koordinaten, die auf dem
 	 * entsprechenden Weg liegen.
 	 * 
-	 * @param spielerEingabe
-	 *            Eingabe des aktuellen Spielers
+	 * @param bewegung
+	 *            Welcher Stein wohin bewegt werden soll
 	 * 
 	 * @return alleLegalenWege Liste aller legalen Wege
 	 */
-	private LinkedList<LinkedList<Koordinate>> erzeugeGueltigeWege(String spielerEingabe, Spieler gegner) {
+	private LinkedList<LinkedList<Koordinate>> erzeugeGueltigeWege(
+			Bewegungskoordinate bewegung, Spieler gegner) {
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
-		Koordinate vonPos;
 		int richtung;
-
-		vonPos = new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0));
 
 		// Die Farbe des Spielers entscheidet darüber ob die Steine nach
 		// unten(höhere Zahlen) oder nach oben(niedrigere Zahlen) bewegt werden
@@ -304,13 +300,13 @@ public class Spieler {
 		}
 		
 		// Teste das Feld vorne links von der Quellkoordinate! aus gesehen
-		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(vonPos, richtung, richtung, gegner));
+		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(bewegung.getStart(), richtung, richtung, gegner));
 		// Teste das Feld vorne rechts von der Quellkoordinate! aus gesehen
-		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(vonPos, richtung, -richtung, gegner));
+		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(bewegung.getStart(), richtung, -richtung, gegner));
 		// Teste das Feld hinten links von der Quellkoordinate! aus gesehen
-		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(vonPos, -richtung, richtung, gegner));
+		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(bewegung.getStart(), -richtung, richtung, gegner));
 		// Teste das Feld hinten rechts von der Quellkoordinate! aus gesehen
-		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(vonPos, -richtung, -richtung, gegner));
+		alleLegalenWege.addAll(erzeugeGueltigenTeilweg(bewegung.getStart(), -richtung, -richtung, gegner));
 
 		return alleLegalenWege;
 	}
@@ -504,11 +500,13 @@ public class Spieler {
 		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege = 
 				new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<Koordinate> aktuellerWeg;
+		Bewegungskoordinate bewegung;
 		
 		//Erzeugt für jeden Stein des aktuellen Spielers alle gültigen Wege
 		for(int i = 0; i < this.getStones().size(); i++){
-			alleSchlagpflichtWegeBuf.addAll(erzeugeGueltigeWege(
-					this.getStones().get(i).getKoordinate().toString(), gegner));
+			bewegung = new Bewegungskoordinate(this.getStones().get(i).getKoordinate(),
+					this.getStones().get(i).getKoordinate());
+			alleSchlagpflichtWegeBuf.addAll(erzeugeGueltigeWege(bewegung, gegner));
 		}
 		
 		// Für jeden Weg...

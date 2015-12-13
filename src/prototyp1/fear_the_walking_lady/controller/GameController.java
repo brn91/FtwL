@@ -120,6 +120,7 @@ public class GameController {
 		boolean rundeGueltig = false;
 		Spieler aktuellerSpieler;
 		Spieler aktuellerGegner;
+		Bewegungskoordinate bewegung;
 		
 		if(player1turn){
 			aktuellerSpieler = spieler1;
@@ -153,9 +154,13 @@ public class GameController {
 		default:
 			if (aktuellerSpieler.koordinatenEingabeCheck(spielerEingabe) == true) {
 				if (GameController.activateCheats && spielerEingabe.length() == 3) {
-					aktuellerSpieler.stoneToLady(new Koordinate((int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0)));
+					aktuellerSpieler.stoneToLady(new Koordinate(
+							(int) (spielerEingabe.charAt(1) - 48), spielerEingabe.charAt(0)));
 				} else {
-					rundeGueltig = aktuellerSpieler.waehleSteinUndZiehe(spielerEingabe, aktuellerGegner);
+					bewegung = new Bewegungskoordinate(
+							new Koordinate(spielerEingabe.charAt(1) - 48, spielerEingabe.charAt(0)),
+							new Koordinate(spielerEingabe.charAt(3) - 48, spielerEingabe.charAt(2)));
+					rundeGueltig = aktuellerSpieler.waehleSteinUndZiehe(bewegung, aktuellerGegner);
 				}
 			}
 			break;

@@ -56,7 +56,7 @@ public class Koordinate {
 	@Override
 	public String toString(){
 		String rueckgabe = String.valueOf(buchstabe);
-		rueckgabe += String.valueOf(zahl);
+		rueckgabe += zahl;
 		
 		return rueckgabe;
 	}
