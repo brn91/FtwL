@@ -15,7 +15,4 @@ public class Lady extends Stone{
 		this.koordinate = zielKoord;
 	}
 	
-	public void schlagen(Stone stoneGegner){
-		
-	}
 }

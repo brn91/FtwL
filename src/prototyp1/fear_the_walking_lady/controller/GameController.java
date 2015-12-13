@@ -3,13 +3,14 @@ package prototyp1.fear_the_walking_lady.controller;
 import prototyp1.fear_the_walking_lady.view.*;
 import prototyp1.fear_the_walking_lady.modell.*;
 
-import java.util.LinkedList;
 import java.util.Random;
+import java.util.LinkedList;
 
 public class GameController {
 	public static boolean activateCheats = false;
 	TextInterface myInterface;
-	boolean player1turn;
+	Spieler verlierer;
+	boolean player1turn = true;
 	Spieler spieler1;
 	Spieler spieler2;
 
@@ -65,6 +66,9 @@ public class GameController {
 		String spielerEingabe;
 		long zeitBuf;
 		long rundenZeit;
+		int gewonnen;
+		
+		this.verlierer = null;
 
 		// Ermitteln der rundenZeit
 		rundenZeit = this.myInterface.createWindowAskTime();
@@ -92,7 +96,17 @@ public class GameController {
 			} while ((!spielzugGueltig) && (System.currentTimeMillis() < zeitBuf));
 			// Wechsle den Spieler
 			this.player1turn ^= true;
-		} while (spielLaeuft(spielerEingabe));
+		} while (spielLaeuft());
+		
+		//Werte das Spiel aus
+		gewonnen = spieler1.hatGewonnen(this.verlierer);
+		if(gewonnen == -1){
+			System.out.println("Spieler1 hat verloren, Spieler2 hat gewonnen!");
+		}else if(gewonnen == 1){
+			System.out.println("Spieler2 hat verloren, Spieler1 hat gewonnen!");
+		}else{
+			System.out.println("Keiner der beiden Spieler hat gewonnen!");
+		}
 
 	}
 
@@ -149,6 +163,11 @@ public class GameController {
 
 		case "BEENDEN":
 			rundeGueltig = true;
+			if(player1turn){
+				this.verlierer = spieler1;
+			}else{
+				this.verlierer = spieler2;
+			}
 			break;
 
 		default:
@@ -169,8 +188,67 @@ public class GameController {
 		return rundeGueltig;
 	}
 
-	public boolean spielLaeuft(String spielerEingabe) {
-		return true;
+	/**
+	 * Stellt fest ob das Spiel noch läuft
+	 * 
+	 * @return laeuft Wahr, wenn Spiel läuft
+	 */
+	public boolean spielLaeuft() {
+		LinkedList<LinkedList<Koordinate>> alleGueltigenWege = 
+				new LinkedList<LinkedList<Koordinate>>();
+		boolean laeuft = true;
+		
+		//wahr wenn:
+		//-prüfe als erstes, wenn spiel abgebrochen(spielLaeuft == false) hat
+		// aktueller spieler verloren
+		//-gegner keine steine mehr
+		//-gegner kann nicht mehr ziehen
+		//-unentschieden wenn beide nur noch lady haben
+		
+		//Wenn bereits ein Verlierer feststeht
+		if(!this.verlierer.equals("")){
+			laeuft = false;
+		}else{
+			if(this.spieler1 != null && this.spieler2 != null){
+				//Wenn Spieler1 keine Steine mehr hat
+				if(spieler1.getStones().size() == 0){
+					this.verlierer = spieler1;
+					laeuft = false;
+				//Wenn Spieler2 keine Steine mehr hat
+				}else if(spieler2.getStones().size() == 0){
+					this.verlierer = spieler2;
+					laeuft = false;
+				//Wenn beide Spieler nur noch einen Stein haben...
+				}else if(spieler1.getStones().size() == 1 && spieler2.getStones().size() == 1){
+					//...und diese Steine Ladys sind
+					if(spieler1.getStones().getFirst() instanceof Lady && 
+							spieler2.getStones().getFirst() instanceof Lady){
+						this.verlierer = null;
+						laeuft = false;
+					}
+				}else if(player1turn){
+					for(int i = 0; i < spieler1.getStones().size(); i++){
+						alleGueltigenWege.addAll(spieler1.erzeugeAlleWege(spieler2));
+					}
+					//Wenn Spieler1 keine seiner Steine mehr bewegen kann
+					if(alleGueltigenWege.size() == 0){
+						this.verlierer = spieler1;
+						laeuft = false;
+					}else{
+						for(int i = 0; i < spieler2.getStones().size(); i++){
+							alleGueltigenWege.addAll(spieler2.erzeugeAlleWege(spieler1));
+						}
+						//Wenn Spieler2 keine seiner Steine mehr bewegen kann
+						if(alleGueltigenWege.size() == 0){
+							this.verlierer = spieler2;
+							laeuft = false;
+						}
+					}
+				}
+			}
+		}
+		
+		return laeuft;
 	}
 	
 	/**

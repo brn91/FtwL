@@ -26,10 +26,6 @@ public class Stone {
 	public void ziehen(Koordinate zielKoord){
 		this.koordinate = zielKoord;
 	}
-	
-	public void schlagen(Stone stoneGegner){
-		
-	}
 
 	@Override
 	public int hashCode() {
