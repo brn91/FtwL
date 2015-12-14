@@ -235,6 +235,7 @@ public class Spieler {
 				for (int i = 1; i < zugWeg.size(); i ++) {
 					bufStein = new Stone(gegner.getFarbe(), zugWeg.get(i));
 					
+					//Ersetze Stein mit Lady falls nötig
 					if(ueberpruefeObSteinZuDame(new Stone(this.getFarbe(), zugWeg.get(i)))){
 						stoneToLady(zugWeg.get(i));
 					}
@@ -257,11 +258,11 @@ public class Spieler {
 								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");
 					// ...sonst ziehe den Stein und lösche den ersten schlagpflichtigen Stein
 					}else{
+						// Ziehe den eigenen Stein an die Zielposition
+						this.getStones().get(indexBuf).ziehen(bewegung.getZiel());
 						this.getStones().remove(bufStein);
 						System.out.println("Der Stein auf " + bufStein.getKoordinate().toString() 
-								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");
-						// Ziehe den eigenen Stein an die Zielposition
-						this.getStones().get(indexBuf-1).ziehen(bewegung.getZiel());
+								+ " wurde aufgrund nicht eingehaltener Schlagpflicht entfernt!");			
 					}
 				}else{
 					// Ziehe den eigenen Stein an die Zielposition
@@ -285,7 +286,7 @@ public class Spieler {
 	 * 
 	 * @return alleLegalenWege Liste aller legalen Wege
 	 */
-	private LinkedList<LinkedList<Koordinate>> erzeugeGueltigeWegeStein(
+	protected LinkedList<LinkedList<Koordinate>> erzeugeGueltigeWegeStein(
 			Bewegungskoordinate bewegung, Spieler gegner) {
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
 		int richtung;
@@ -321,7 +322,7 @@ public class Spieler {
 	 * @param gegner Der gegnerische Spieler
 	 * @return alleLegalenWege Alle Wege in eine bestimmte Richtung
 	 */
-	private LinkedList<LinkedList<Koordinate>> erzeugeGueltigenTeilweg(
+	protected LinkedList<LinkedList<Koordinate>> erzeugeGueltigenTeilweg(
 			Koordinate vonPos, int richtungZahl, int richtungBuch, Spieler gegner){
 		
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
@@ -403,7 +404,7 @@ public class Spieler {
 	 * 
 	 * @return alleLegalenWege Liste aller legalen Wege
 	 */
-	private LinkedList<LinkedList<Koordinate>> pruefeObGegnerSchlagbar(Spieler gegner,
+	protected LinkedList<LinkedList<Koordinate>> pruefeObGegnerSchlagbar(Spieler gegner,
 			Koordinate aktKoord, LinkedList<Koordinate> legalerWeg,
 			LinkedList<LinkedList<Koordinate>> alleLegalenWege) {
 		Stone bufGegnerStone = new Stone(gegner.getFarbe(), aktKoord);
@@ -492,7 +493,7 @@ public class Spieler {
 	 * 
 	 * @return alleSchlagpflichtWege Gültige Wege für den Schlagpflichtabgleich
 	 */
-	private LinkedList<LinkedList<Koordinate>> erzeugeSchlagpflichtWege(Spieler gegner){
+	protected LinkedList<LinkedList<Koordinate>> erzeugeSchlagpflichtWege(Spieler gegner){
 		LinkedList<LinkedList<Koordinate>> alleWege = new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege = 
 				new LinkedList<LinkedList<Koordinate>>();
@@ -554,7 +555,7 @@ public class Spieler {
 	 *            Die Liste, die kopiert wird
 	 * @return kopierteListe Die Kopie
 	 */
-	private LinkedList<Koordinate> copy(LinkedList<Koordinate> koordinatenListe) {
+	protected LinkedList<Koordinate> copy(LinkedList<Koordinate> koordinatenListe) {
 		LinkedList<Koordinate> kopierteListe = new LinkedList<Koordinate>();
 
 		for (Koordinate buf : koordinatenListe) {
