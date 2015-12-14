@@ -34,31 +34,12 @@ public class GameMenue{
 		String rueckgabe = null;
 		int menueEingabe = -1;
 		
+		
 		//Ausgabe, welcher Spieler an der reihe ist
 		if(player1turn){
-			System.out.println("\n\n\nSpieler 1 ist dran\n");
+			System.out.println("\n\n\nSpieler 1 ist dran");
 		}else{
-			System.out.println("\n\n\nSpieler 2 ist dran\n");
-		}
-		
-		if(this.spieler.getFarbe().equals("Weiß")){
-			//Gebe von oben ausgehend für jede Zeile des Feldes...
-			for(int i = 0; i < Koordinate.MAX_Z_K + 1; i++){
-				//...jede Spalte auf dem Bildschirm aus
-				for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
-					System.out.print(this.myField.getFeld()[i][j]);
-				}
-				System.out.println();
-			}
-		}else{
-			//Gebe von unten ausgehend für jede Zeile des Feldes...
-			for(int i = Koordinate.MAX_Z_K; i >= 0; i--){
-				//...jede Spalte auf dem Bildschirm aus
-				for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
-					System.out.print(this.myField.getFeld()[i][j]);
-				}
-				System.out.println();
-			}
+			System.out.println("\n\n\nSpieler 2 ist dran");
 		}
 		
 		//Ausgabe der Menüpunkte
@@ -80,7 +61,8 @@ public class GameMenue{
 				switch(menueEingabe){
 				case 0:		rueckgabe = "Spielanleitung";
 							break;
-				case 1: 	System.out.println("Gebe die Koordinaten ein:");
+				case 1: 	feldausgabe();
+							System.out.println("Gebe die Koordinaten ein:");
 							System.out.println("(B1A2 steht zB für: Ziehe B1 auf B2)");
 							rueckgabe = in.nextLine();
 							break;
@@ -91,6 +73,7 @@ public class GameMenue{
 							}								
 							break;
 				case 3:		if(GameController.activateCheats){
+								feldausgabe();
 								System.out.println("Gebe die Koordinaten ein:");
 								System.out.println("(B1 steht zB für: Wandle B1 um)");
 								rueckgabe = in.nextLine();
@@ -109,10 +92,38 @@ public class GameMenue{
 		}while(rueckgabe == null);
 		
 		//Falls die RundenZeit überschritten wurde
-		if(System.currentTimeMillis() > rundenZeit){
+		if(System.currentTimeMillis() > rundenZeit && !rueckgabe.equals("Spielanleitung")){
 			rueckgabe = "Zeitüberschreitung";
 		}
+		
+		rueckgabe = rueckgabe.toUpperCase();
 
 		return rueckgabe;
-	}	
+	}
+	
+	/**
+	 * Gibt das Spielfeld für den aktuellen Spieler aus
+	 */
+	private void feldausgabe(){
+		//Ausgabe des Spielfelds
+		if(this.spieler.getFarbe().equals("Schwarz")){
+			//Gebe von unten ausgehend für jede Zeile des Feldes...
+			for(int i = Koordinate.MAX_Z_K; i >= 0; i--){
+				//...jede Spalte auf dem Bildschirm aus
+				for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
+					System.out.print(this.myField.getFeld()[i][j]);
+				}
+				System.out.println();
+			}
+		}else{
+			//Gebe von oben ausgehend für jede Zeile des Feldes...
+			for(int i = 0; i < Koordinate.MAX_Z_K + 1; i++){
+				//...jede Spalte auf dem Bildschirm aus
+				for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
+					System.out.print(this.myField.getFeld()[i][j]);
+				}
+				System.out.println();
+			}
+		}
+	}
 }
