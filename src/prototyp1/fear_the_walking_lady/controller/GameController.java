@@ -75,7 +75,7 @@ public class GameController {
 
 		// Frage, welcher Spieler startet und setze die Anfangssteine
 		this.player1turn = this.myInterface.createWindowAskWhoStarts();
-		stelleSteineAnfangsposition();
+		stelleSteineAnfangspositionHvsH();
 
 		// Spieler wechseln sich ab solange das Spiel läuft
 		do {
@@ -84,7 +84,7 @@ public class GameController {
 			// Tue bis die Zeit abgelaufen ist oder der Spielzug gültig ist
 			do {
 				// Die Eingabe des Spielers ermitteln
-				spielerEingabe = this.myInterface.createAndPrintGameMenueHvsH(this.spieler1, this.spieler2,
+				spielerEingabe = this.myInterface.createAndPrintGameMenue(this.spieler1, this.spieler2,
 						this.player1turn, zeitBuf);
 				// Die Eingabe verarbeiten
 				spielzugGueltig = ueberpruefeSpielzug(spielerEingabe);
@@ -117,7 +117,60 @@ public class GameController {
 	 * Startet und verwaltet ein Spiel Mensch gegen Computer
 	 */
 	public void runGameHvsC() {
+		boolean spielzugGueltig = false;
+		String spielerEingabe;
+		long zeitBuf;
+		long rundenZeit;
+		int gewonnen;
+		
+		this.verlierer = null;
 
+		// Ermitteln der rundenZeit
+		rundenZeit = this.myInterface.createWindowAskTime();
+
+		// Frage, welcher Spieler startet und setze die Anfangssteine
+		this.player1turn = this.myInterface.createWindowAskWhoStarts();
+		stelleSteineAnfangspositionHvsC();
+
+		// Spieler wechseln sich ab solange das Spiel läuft
+		do {
+			//Wenn der Mensch dran ist
+			if(player1turn){
+				// Zeit zum Anfang des Zuges ermitteln und rundenZeit dazurechnen
+				zeitBuf = System.currentTimeMillis() + rundenZeit;
+				// Tue bis die Zeit abgelaufen ist oder der Spielzug gültig ist
+				do {
+					// Die Eingabe des Spielers ermitteln
+					spielerEingabe = this.myInterface.createAndPrintGameMenue(this.spieler1, this.spieler2,
+							this.player1turn, zeitBuf);
+					// Die Eingabe verarbeiten
+					spielzugGueltig = ueberpruefeSpielzug(spielerEingabe);
+					if (!spielzugGueltig) {
+						System.out.println("Ungültiger Spielzug!");
+					}
+					//Zeit zurücksetzen nachdem Spielanleitung angeschaut wurde
+					if(spielerEingabe.equals("SPIELANLEITUNG")){
+						zeitBuf = System.currentTimeMillis() + rundenZeit;
+					}
+	
+				} while ((!spielzugGueltig) && (System.currentTimeMillis() < zeitBuf));
+			//Wenn die KI dran ist
+			}else{
+				((Ki)spieler2).kiZug(spieler1);
+			}
+			// Wechsle den Spieler
+			this.player1turn ^= true;
+		} while (spielLaeuft());
+		
+		//Werte das Spiel aus
+		gewonnen = spieler1.hatGewonnen(this.verlierer);
+		if(gewonnen == -1){
+			System.out.println("Spieler1 hat verloren, Die KI hat gewonnen!");
+		}else if(gewonnen == 1){
+			System.out.println("Die KI hat verloren, Spieler1 hat gewonnen!");
+		}else{
+			System.out.println("Keiner der beiden Spieler hat gewonnen!");
+		}
 	}
 
 	/**
@@ -275,14 +328,27 @@ public class GameController {
 	}
 
 	/**
-	 * Stellt alle Steine an die Anfangsposition.
+	 * Stellt alle Steine an die Anfangsposition für HvsH.
 	 */
-	public void stelleSteineAnfangsposition() {
-		if (this.player1turn == true) {
+	public void stelleSteineAnfangspositionHvsH() {
+		if (this.player1turn) {
 			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
-			this.spieler2 = new Spieler(Spieler.spielerFarbe.WEIß);
+			this.spieler2 = new Ki(Spieler.spielerFarbe.WEIß);
 		} else {
 			this.spieler1 = new Spieler(Spieler.spielerFarbe.WEIß);
+			this.spieler2 = new Ki(Spieler.spielerFarbe.SCHWARZ);
+		}
+	}
+	
+	/**
+	 * Stellt alle Steine an die Anfangsposition für HvsC.
+	 */
+	public void stelleSteineAnfangspositionHvsC() {
+		if (this.player1turn) {
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler2 = new Ki(Spieler.spielerFarbe.WEIß);
+		} else {
+			this.spieler1 = new Ki(Spieler.spielerFarbe.WEIß);
 			this.spieler2 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
 		}
 	}

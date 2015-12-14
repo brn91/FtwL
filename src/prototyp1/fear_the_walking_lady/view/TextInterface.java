@@ -42,7 +42,7 @@ public class TextInterface {
 	 * @param player1turn Ist Spieler 1 gerade am Zug?
 	 * @return koordinate Die Spielereingabe
 	 */
-	public String createAndPrintGameMenueHvsH(
+	public String createAndPrintGameMenue(
 			Spieler spieler1, Spieler spieler2, boolean player1turn, long rundenZeit){
 		
 		Field feld = new Field(spieler1.getStones(), spieler2.getStones());
@@ -59,10 +59,6 @@ public class TextInterface {
 			
 		return koordinate;
 	}
-	
-	public Bewegungskoordinate createAndPrintGameMenueHvsC(Spieler spieler){
-		return null;
-	}
 
 	/**
 	 * Erzeugt ein Menü das abfragt, welcher Spieler beginnen darf.
@@ -75,8 +71,8 @@ public class TextInterface {
 
 		do{
 			System.out.println("Wer nimmt die Farbe Schwarz und beginnt das Spiel?");
-			System.out.println("1: Spieler1");
-			System.out.println("2: Spieler2");
+			System.out.println("1: Spieler1/Mensch");
+			System.out.println("2: Spieler2/KI");
 			
 			try{
 				spieler = Integer.parseInt(in.nextLine());

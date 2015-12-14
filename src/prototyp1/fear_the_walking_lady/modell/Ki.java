@@ -5,4 +5,8 @@ public class Ki extends Spieler{
 	public Ki(spielerFarbe color){
 		super(color);
 	}
+	
+	public void kiZug(Spieler mensch){
+		
+	}
 }
