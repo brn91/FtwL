@@ -54,6 +54,11 @@ public class Field {
 		return this.feld;
 	}
 	
+	/**
+	 * Fügt die Steine eines Spielers in das Feld ein
+	 * 
+	 * @param playerStones Steine des Spielers
+	 */
 	private void insertPlayerStones(LinkedList<Stone> playerStones){
 		int zahlBuf;
 		int buchstabenBuf;
@@ -76,5 +81,21 @@ public class Field {
 				}
 			}			
 		}
+	}
+	
+	@Override
+	public String toString(){
+		String rueckgabe = "";
+		
+		//Kopiere von unten ausgehend für jede Zeile des Feldes...
+		for(int i = 0; i <= Koordinate.MAX_Z_K; i++){
+			//...jede Spalte in den String
+			for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
+				rueckgabe += this.feld[i][j];
+			}
+			rueckgabe += "\n";
+		}
+		
+		return rueckgabe;
 	}
 }

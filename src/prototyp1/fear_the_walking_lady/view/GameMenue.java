@@ -92,7 +92,7 @@ public class GameMenue{
 		}while(rueckgabe == null);
 		
 		//Falls die RundenZeit überschritten wurde
-		if(System.currentTimeMillis() > rundenZeit && !rueckgabe.equals("Spielanleitung")){
+		if(System.currentTimeMillis() > this.rundenZeit && !rueckgabe.equals("Spielanleitung")){
 			rueckgabe = "Zeitüberschreitung";
 		}
 		
@@ -117,7 +117,7 @@ public class GameMenue{
 			}
 		}else{
 			//Gebe von oben ausgehend für jede Zeile des Feldes...
-			for(int i = 0; i < Koordinate.MAX_Z_K + 1; i++){
+			for(int i = 0; i <= Koordinate.MAX_Z_K; i++){
 				//...jede Spalte auf dem Bildschirm aus
 				for(int j = 0; j < Koordinate.MAX_B_K - 'A' + 2 ; j++){
 					System.out.print(this.myField.getFeld()[i][j]);

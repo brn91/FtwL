@@ -586,6 +586,28 @@ public class Spieler {
 		return gewinner;
 	}
 	
+	/**
+	 * Die Methode stellt fest, ob dieser Spieler überhaupt gültige Züge machen kann
+	 * 
+	 * @param gegner Der Gegner des Spielers
+	 * @return canMoove Wahr, wenn Züge möglich sind
+	 */
+	public boolean canMove(Spieler gegner){
+		LinkedList<LinkedList<Koordinate>> alleGueltigenWege = 
+				new LinkedList<LinkedList<Koordinate>>();
+		boolean canMove = true;
+		
+		for(int i = 0; i < this.playerStones.size(); i++){
+			alleGueltigenWege.addAll(this.erzeugeAlleWege(gegner));
+		}
+		
+		//Wenn Spieler1 keine seiner Steine mehr bewegen kann
+		if(alleGueltigenWege.size() == 0){
+			canMove = false;
+		}
+		
+		return canMove;
+	}
 	
 	//(DEBUG)
 	//Gebe die Koordinaten aller Steine des Spielers auf dem Bildschirm aus

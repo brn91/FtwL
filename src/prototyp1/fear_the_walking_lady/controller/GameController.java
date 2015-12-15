@@ -4,7 +4,6 @@ import prototyp1.fear_the_walking_lady.view.*;
 import prototyp1.fear_the_walking_lady.modell.*;
 
 import java.util.Random;
-import java.util.LinkedList;
 
 public class GameController {
 	public static boolean activateCheats = false;
@@ -289,8 +288,6 @@ public class GameController {
 	 * @return laeuft Wahr, wenn Spiel läuft
 	 */
 	public boolean spielLaeuft() {
-		LinkedList<LinkedList<Koordinate>> alleGueltigenWege = 
-				new LinkedList<LinkedList<Koordinate>>();
 		boolean laeuft = true;
 		
 		//wahr wenn:
@@ -321,24 +318,12 @@ public class GameController {
 						this.verlierer = null;
 						laeuft = false;
 					}
-				}else if(player1turn){
-					for(int i = 0; i < spieler1.getStones().size(); i++){
-						alleGueltigenWege.addAll(spieler1.erzeugeAlleWege(spieler2));
-					}
-					//Wenn Spieler1 keine seiner Steine mehr bewegen kann
-					if(alleGueltigenWege.size() == 0){
+				}else if(spieler1.canMove(spieler2) == false){			
 						this.verlierer = spieler1;
 						laeuft = false;
-					}else{
-						for(int i = 0; i < spieler2.getStones().size(); i++){
-							alleGueltigenWege.addAll(spieler2.erzeugeAlleWege(spieler1));
-						}
-						//Wenn Spieler2 keine seiner Steine mehr bewegen kann
-						if(alleGueltigenWege.size() == 0){
-							this.verlierer = spieler2;
-							laeuft = false;
-						}
-					}
+				}else if(spieler2.canMove(spieler1) == false){
+						this.verlierer = spieler2;
+						laeuft = false;
 				}
 			}
 		}

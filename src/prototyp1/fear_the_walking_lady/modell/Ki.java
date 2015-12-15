@@ -16,11 +16,11 @@ public class Ki extends Spieler{
 	 * 
 	 * @return zugGueltig Wahr, wenn Zug gueltig ist
 	 */
-	public boolean kiZug(Spieler gegner){
+	public String kiZug(Spieler gegner){
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<LinkedList<Koordinate>> schlagliste = new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<Koordinate> zugWeg = null;
-		boolean zugGueltig;
+		Bewegungskoordinate bewegung;
 		Random rand = new Random();
 		int r;
 		
@@ -43,9 +43,9 @@ public class Ki extends Spieler{
 		}
 		
 		//Mache den Zug
-		zugGueltig = waehleSteinUndZiehe(
-				new Bewegungskoordinate(zugWeg.getFirst(), zugWeg.getLast()), gegner);
+		bewegung = new Bewegungskoordinate(zugWeg.getFirst(), zugWeg.getLast());
+		waehleSteinUndZiehe(bewegung, gegner);
 		
-		return zugGueltig;
+		return bewegung.toString();
 	}
 }

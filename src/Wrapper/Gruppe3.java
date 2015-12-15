@@ -1,6 +1,7 @@
 package Wrapper;
 
 import prototyp1.fear_the_walking_lady.controller.GameController;
+import prototyp1.fear_the_walking_lady.modell.*;
 
 public class Gruppe3 implements GruppeX {
 	private GameController spiel;
@@ -92,11 +93,17 @@ public class Gruppe3 implements GruppeX {
 	 * @return String, den Zug des Programms
 	 */
 	public String getMyMove() {
+		String rueckgabe;
 		
-		
-		
-		return null;
-
+		if(this.wirSindSpieler1){
+			this.spiel.setPlayer1turn(true);
+			rueckgabe = ((Ki)this.spiel.getSpieler1()).kiZug(this.spiel.getSpieler2());
+		}else{
+			this.spiel.setPlayer1turn(false);
+			rueckgabe = ((Ki)this.spiel.getSpieler2()).kiZug(this.spiel.getSpieler1());
+		}
+			
+		return rueckgabe;
 	}
 
 	/**
@@ -107,8 +114,15 @@ public class Gruppe3 implements GruppeX {
 	 * @return false, falls der Zug des Gegners nicht erlaubt ist
 	 */
 	public boolean canYouMove() {
-		return false;
-
+		boolean canMove;
+		
+		if(wirSindSpieler1){
+			canMove = this.spiel.getSpieler2().canMove(this.spiel.getSpieler1());
+		}else{
+			canMove = this.spiel.getSpieler1().canMove(this.spiel.getSpieler2());
+		}
+		
+		return canMove;
 	}
 
 	/**
@@ -119,8 +133,15 @@ public class Gruppe3 implements GruppeX {
 	 * @return false, falls der Zug nicht erlaubt ist.
 	 */
 	public boolean canIMove() {
-		return false;
-
+		boolean canMove;
+		
+		if(wirSindSpieler1){
+			canMove = this.spiel.getSpieler1().canMove(this.spiel.getSpieler2());
+		}else{
+			canMove = this.spiel.getSpieler2().canMove(this.spiel.getSpieler1());
+		}
+		
+		return canMove;
 	}
 
 	/**
@@ -128,7 +149,10 @@ public class Gruppe3 implements GruppeX {
 	 * Zustand auf der Konsole aus
 	 */
 	public void printBoard() {
+		Field feld = new Field(
+				this.spiel.getSpieler1().getStones(), this.spiel.getSpieler2().getStones());
 		
+		System.out.println(feld.toString());
 	}
 
 }
