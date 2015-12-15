@@ -15,7 +15,7 @@ public class StartMenue {
 		
 		//Frage nach einer Eingabe bis Sie gültig ist
 		do{
-			System.out.println("StartMenü");
+			System.out.println("\n\nStartMenü");
 			System.out.println("1: Spielanleitung lesen");
 			System.out.println("2: Mensch gegen Mensch");
 			System.out.println("3: Mensch gegen Computer");

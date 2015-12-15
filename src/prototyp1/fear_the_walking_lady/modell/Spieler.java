@@ -241,10 +241,8 @@ public class Spieler {
 					}
 					
 					// Wenn die aktuelle Koordinate einen Gegner beinhaltet, entferne ihn
-					if(gegner.getStones().remove(bufStein)){
-						System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe()
-								+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
-					}
+					entferneGegnerStein(gegner.getStones(), bufStein);	
+
 				}
 				
 				// Wenn die Schlagpflicht nicht beachtet wurde
@@ -563,6 +561,25 @@ public class Spieler {
 		}
 
 		return kopierteListe;
+	}
+	
+	/**
+	 * Wenn der zu testende Stein ein Gegner ist, entferne ihn
+	 * 
+	 * @param gegnerSteine Die Steine des Gegners
+	 * @param bufStein Der zu testende Stein
+	 * @return gegnerGEschlagen Wahr, wenn gegnerischer Stein geschlagen wurde
+	 */
+	protected boolean entferneGegnerStein(LinkedList<Stone> gegnerSteine, Stone bufStein){
+		boolean gegnerGeschlagen = false;
+		
+		if(gegnerSteine.remove(bufStein)){
+			System.out.println("Der Gegner auf " + bufStein.getKoordinate().getBuchstabe()
+					+ bufStein.getKoordinate().getZahl() + " wurde geschlagen!");
+			gegnerGeschlagen = true;
+		}
+		
+		return gegnerGeschlagen;
 	}
 
 	/**
