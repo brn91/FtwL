@@ -8,11 +8,11 @@ import java.util.LinkedList;
 
 public class GameController {
 	public static boolean activateCheats = false;
-	TextInterface myInterface;
-	Spieler verlierer;
-	boolean player1turn = true;
-	Spieler spieler1;
-	Spieler spieler2;
+	private TextInterface myInterface;
+	private Spieler verlierer;
+	private boolean player1turn = true;
+	private Spieler spieler1;
+	private Spieler spieler2;
 
 	/**
 	 * Erzeugt einen GameController, der das Spiel verwaltet
@@ -21,9 +21,50 @@ public class GameController {
 		this.myInterface = new TextInterface();
 	}
 
-	// public boolean createInterface(){
-	// myInterface = new TextInterface();
-	// }
+	/**
+	 * Gibt den ersten Spieler zurück
+	 * 
+	 * @return spieler1 Der erste Spieler
+	 */
+	public Spieler getSpieler1(){
+		return this.spieler1;
+	}
+	
+	/**
+	 * Gibt den zweiten Spieler zurück
+	 * 
+	 * @return spieler2 Der zweite Spieler
+	 */
+	public Spieler getSpieler2(){
+		return this.spieler2;
+	}
+	
+	/**
+	 * Gibt den Verlierer zurück
+	 * 
+	 * @return verlierer Der Verlierer
+	 */
+	public Spieler getVerlierer(){
+		return this.verlierer;
+	}
+	
+	/**
+	 * Gibt zurück ob Spieler 1 gerade an der Reihe ist
+	 * 
+	 * @return player1turn Wahr, wenn Spieler 1 an der Reihe ist
+	 */
+	public boolean getPlayer1turn(){
+		return this.player1turn;
+	}
+	
+	/**
+	 * Ändert, werlcher Spieler gerade an der Reihe ist
+	 * 
+	 * @param player1turn Wahr, wenn Spieler 1 an die Reihe kommen soll
+	 */
+	public void setPlayer1turn(boolean player1turn){
+		this.player1turn = player1turn;
+	}
 
 	/**
 	 * Gibt das Startmenü aus und verarbeitet die Eingabe
@@ -67,8 +108,6 @@ public class GameController {
 		long zeitBuf;
 		long rundenZeit;
 		int gewonnen;
-		
-		this.verlierer = null;
 
 		// Ermitteln der rundenZeit
 		rundenZeit = this.myInterface.createWindowAskTime();
@@ -331,6 +370,8 @@ public class GameController {
 	 * Stellt alle Steine an die Anfangsposition für HvsH.
 	 */
 	public void stelleSteineAnfangspositionHvsH() {
+		this.verlierer = null;
+		
 		if (this.player1turn) {
 			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
 			this.spieler2 = new Ki(Spieler.spielerFarbe.WEIß);
@@ -344,12 +385,29 @@ public class GameController {
 	 * Stellt alle Steine an die Anfangsposition für HvsC.
 	 */
 	public void stelleSteineAnfangspositionHvsC() {
+		this.verlierer = null;
+		
 		if (this.player1turn) {
 			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
 			this.spieler2 = new Ki(Spieler.spielerFarbe.WEIß);
 		} else {
-			this.spieler1 = new Ki(Spieler.spielerFarbe.WEIß);
-			this.spieler2 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.WEIß);
+			this.spieler2 = new Ki(Spieler.spielerFarbe.SCHWARZ);
+		}
+	}
+	
+	/**
+	 * Stellt alle Steine an die Anfangsposition für CvsC.
+	 */
+	public void stelleSteineAnfangspositionCvsC() {
+		this.verlierer = null;
+		
+		if (this.player1turn) {
+			this.spieler1 = new Ki(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler2 = new Spieler(Spieler.spielerFarbe.WEIß);
+		} else {
+			this.spieler1 = new Spieler(Spieler.spielerFarbe.SCHWARZ);
+			this.spieler2 = new Ki(Spieler.spielerFarbe.WEIß);
 		}
 	}
 }

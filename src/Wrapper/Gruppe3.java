@@ -1,22 +1,34 @@
 package Wrapper;
 
-public class Gruppe3 implements GruppeX {
+import prototyp1.fear_the_walking_lady.controller.GameController;
 
-	// KI3 gruppe 3=new Ki3();
-	// KI2 gruppe 2= new KI2();
+public class Gruppe3 implements GruppeX {
+	private GameController spiel;
+	private boolean wirSindSpieler1;
+
+	/**
+	 * Konstruktor
+	 */
+	public Gruppe3(){
+		spiel = new GameController();
+	}
 
 	/**
 	 * Signalisiert dem jeweiligen Programm, das es den ersten Zug macht.
 	 */
 	public void youAreFirst() {
-		// KI3 collor Schwarz
+		this.spiel.setPlayer1turn(true);
+		this.wirSindSpieler1 = true;
+		this.spiel.stelleSteineAnfangspositionCvsC();
 	}
 
 	/**
 	 * Signalisiert dem jeweiligen Programm, dass es den zweiten Zug macht
 	 */
 	public void youAreSecond() {
-		// KI2 collor Weiß
+		this.spiel.setPlayer1turn(false);
+		this.wirSindSpieler1 = false;
+		this.spiel.stelleSteineAnfangspositionCvsC();
 	}
 
 	/**
@@ -29,9 +41,7 @@ public class Gruppe3 implements GruppeX {
 	 *         ist
 	 */
 	public boolean isRunning() {
-		return false;
-		//return isGameRunning();
-
+		return this.spiel.spielLaeuft();
 	}
 
 	/**
@@ -44,9 +54,18 @@ public class Gruppe3 implements GruppeX {
 	 * @return -1, falls Programm verloren hat
 	 */
 	public int whoWon() {
-		return 0;
-	//	return gruppe2.gewonnen;
-
+		int rueckgabe = 0;
+		
+		//Wenn das Spiel nicht mehr läuft, checke ob unsere Ki gewonnen hat
+		if(!isRunning()){
+			if(this.wirSindSpieler1){
+				rueckgabe = this.spiel.getSpieler1().hatGewonnen(this.spiel.getVerlierer());
+			}else{
+				rueckgabe = this.spiel.getSpieler2().hatGewonnen(this.spiel.getVerlierer());
+			}
+		}
+		
+		return rueckgabe;
 	}
 
 	/**
@@ -58,9 +77,13 @@ public class Gruppe3 implements GruppeX {
 	 * @return false, falls der Zug des Gegbers ungültig ist.
 	 */
 	public boolean takeYourMove(String hisMove) {
-		return false;
-
-	//	return ueberpuefeZug(hisMove);
+		if(this.wirSindSpieler1){
+			this.spiel.setPlayer1turn(false);
+		}else{
+			this.spiel.setPlayer1turn(true);
+		}
+		
+		return this.spiel.ueberpruefeSpielzug(hisMove);
 	}
 
 	/**
@@ -69,6 +92,9 @@ public class Gruppe3 implements GruppeX {
 	 * @return String, den Zug des Programms
 	 */
 	public String getMyMove() {
+		
+		
+		
 		return null;
 
 	}
