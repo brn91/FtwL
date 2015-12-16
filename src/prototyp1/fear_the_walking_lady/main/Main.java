@@ -1,6 +1,7 @@
 package prototyp1.fear_the_walking_lady.main;
 
 import prototyp1.fear_the_walking_lady.controller.*;
+
 import java.util.Scanner;
 
 public class Main {
@@ -9,7 +10,7 @@ public class Main {
 		GameController gc = new GameController();
 		Scanner in = new Scanner(System.in);
 		int eingabe;
-
+		
 		
 		System.out.println("1: Test- /Cheatmodus");
 		System.out.println("2: Normales Spiel");

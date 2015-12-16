@@ -13,6 +13,31 @@ public class Spieler {
 		SCHWARZ
 	}
 	
+	//Testkonstruktor
+	//Erzeugt einen Spieler mit den als Parameter angegebenen Steinen
+	//Wenn der Parameter zB der String A2b3C4 ist, werden Steine auf Koordinate A2, B3, C4 erstellt
+	//Achtung! Es findet keine Gültigkeitsprüfung statt!
+	public Spieler(spielerFarbe color, String steinkoordinaten){
+		Koordinate bufKoord;
+		
+		this.playerStones = new LinkedList<Stone>();
+		steinkoordinaten = steinkoordinaten.toUpperCase();
+		
+		if(color == spielerFarbe.WEIß){
+			this.farbe = "Weiß";
+		}else{
+			this.farbe = "Schwarz";
+		}
+		
+		//Wenn der String steinkkordinaten gerade ist
+		if(steinkoordinaten.length()%2 == 0){
+			for(int i=0; i < steinkoordinaten.length(); i += 2){
+				bufKoord = new Koordinate(steinkoordinaten.charAt(i+1)-48, steinkoordinaten.charAt(i));
+				playerStones.add(new Stone(this.farbe, bufKoord));
+			}
+		}	
+	}
+	
 	/**
 	 * Erstellt die Spielersteine an den Startkoordinaten 
 	 * und weist ihm eine Farbe zu.
