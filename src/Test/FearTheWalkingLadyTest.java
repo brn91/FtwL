@@ -5,130 +5,92 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import prototyp1.fear_the_walking_lady.modell.Koordinate;
+import prototyp1.fear_the_walking_lady.modell.Lady;
 import prototyp1.fear_the_walking_lady.modell.Stone;
+import prototyp1.fear_the_walking_lady.modell.Spieler;
+import prototyp1.fear_the_walking_lady.modell.Spieler.spielerFarbe;
 
 public class FearTheWalkingLadyTest {
 	// Hier ein Spielfeld erstellen, welches dann in den einzelnen Testcases nur
 	// veränderd wird.
 	/**
-	 * Erzeuge ein Paar Steine und schaue, ob er richtig erzeugt wurde.
+	 * Erzeuge einen weißen Stein und schaut, ob er richtig erzeugt wurde.
 	 */
 	@Test
-	public void testErzeugeStein() {
+	public void testErzeugeSteinWeiss() {
 		Stone a = new Stone("Weiß", new Koordinate(1, 'A'));
 		assertEquals("Weiß", a.getColor());
 		assertEquals(1, a.getKoordinate().getZahl());
 		assertEquals('A', a.getKoordinate().getBuchstabe());
 	}
-
 	/**
-	 * Erzeuge einen Stein und verändere die Position mehrmals und schaue, ob
-	 * diese richtig verändert wird.
+	 * Erzeuge einen schwarzen Stein und schaut, ob er richtig erzeugt wurde.
 	 */
 	@Test
-	public void testPositionenVerändern() {
-		fail("Not yet implemented");
+	public void testErzeugeSteinSchwarz() {
+		Stone a = new Stone("Schwarz", new Koordinate(2, 'F'));
+		assertEquals("Schwarz", a.getColor());
+		assertEquals(2, a.getKoordinate().getZahl());
+		assertEquals('F', a.getKoordinate().getBuchstabe());
 	}
-
 	/**
-	 * Erzeuge ein paar Ladys und schaue, ob diese Korrekt inizialisiert wird.
+	 * Erzeuge eine schwarze Lady und schaut, ob diese Korrekt inizialisiert wird.
 	 */
 	@Test
-	public void testLady() {
-		fail("Not yet implemented");
+	public void testLadySchwarz() {
+		Stone a = new Lady("Schwarz", new Koordinate(2, 'F'));
+		assertEquals("Schwarz", a.getColor());
+		assertEquals(2, a.getKoordinate().getZahl());
+		assertEquals('F', a.getKoordinate().getBuchstabe());
+		assertEquals(true, a instanceof Lady);
 	}
-
 	/**
-	 * Erzeuge Steine und mache diese zur Lady und schau, ob dies korrekt
-	 * geschieht.
+	 * Erzeuge eine weiße Lady und schaut, ob diese Korrekt inizialisiert wird.
 	 */
 	@Test
-	public void testSteinZuLady() {
-		fail("Not yet implemented");
+	public void testLadyWeiss() {
+		Stone a = new Lady("Weiß", new Koordinate(1, 'A'));
+		assertEquals("Weiß", a.getColor());
+		assertEquals(1, a.getKoordinate().getZahl());
+		assertEquals('A', a.getKoordinate().getBuchstabe());
+		assertEquals(true, a instanceof Lady);
 	}
-
 	/**
-	 * Erzeuge einen Stein an der gegnerischen Seite und rüfe die Überprüfung
-	 * zur Ladyerzeugung auf. Schaue ob eine Lady entstanden ist. Anschließend
-	 * sorge dafür das die überprüfung geschiet, aber ein Stein nicht zur Lady
-	 * wird und überprüfe dies auch.
+	 * Erzeugt einen weißen Stein und überprüft ob dieser zur Lady werden darf.
 	 */
 	@Test
-	public void testSteinZuLadyFeld() {
-		fail("Not yet implemented");
+	public void testDarfSteinZuLadyWeiss() {
+		Spieler a = new Spieler(spielerFarbe.WEIß,"A1");
+		assertEquals(true,a.ueberpruefeObSteinZuDame(a.getStones().getFirst()));
 	}
-
 	/**
-	 * Schaue nach, ob das Zeitlimit funktioniert.
+	 * Erzeugt einen schwarzen Stein und überprüft ob dieser zur Lady werden darf.
 	 */
 	@Test
-	public void testZeitlimit() {
-		fail("Not yet implemented");
+	public void testDarfSteinZuLadySchwarz() {
+		Spieler a = new Spieler(spielerFarbe.SCHWARZ,"F6");
+		
+		assertEquals(true,a.ueberpruefeObSteinZuDame(a.getStones().getFirst()));
 	}
-
+	
 	/**
-	 * Spielfeld aufbauen und einen gültigen Zug starten. Dies überprüfen.
+	 * Erzeugt einen weißen Stein und macht diesen zur Lady.
 	 */
 	@Test
-	public void testGueltigerZug() {
-		fail("Not yet implemented");
+	public void testWirdSteinZuLadyWeiss() {
+		Spieler a = new Spieler(spielerFarbe.WEIß,"A1");
+		a.stoneToLady(new Koordinate(1,'A'));
+		assertEquals(true,(a.getStones().getFirst()) instanceof Lady);
 	}
-
 	/**
-	 * Spielfeld aufbauen und einen ungültigen Zug starten. Dies überprüfen.
+	 * Erzeugt einen schwarzen Stein und und macht diesen zur Lady.
 	 */
 	@Test
-	public void testUngueltigerZug() {
-		fail("Not yet implemented");
+	public void testWirdSteinZuLadySchwarz() {
+		Spieler a = new Spieler(spielerFarbe.SCHWARZ,"F6");
+		a.stoneToLady(new Koordinate(6,'F'));
+		assertEquals(true,(a.getStones().getFirst()) instanceof Lady);
 	}
-
-	/**
-	 * Schlage einen Stein und schaue ob dieser entfernt wird.
-	 */
-	@Test
-	public void testSteinGeschlagen() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Schaue, ob das spiel noch läuft.
-	 */
-	@Test
-	public void testGameRunning() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Schaue ob das spiel vorbei ist.
-	 */
-	@Test
-	public void testGameNotRunning() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Baue Spielsituationen in denen der Computer gewinnt und überprüfe dies.
-	 */
-	@Test
-	public void testComputerGewinnt() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Baue Spielsituationen in denen der Computer verliert und überprüfe dies.
-	 */
-	@Test
-	public void testComputerVerliert() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Schaue nach ob bei der ersten Spielfeldinizialisierung alle Spielsteine
-	 * korrekt stehen.
-	 */
-	@Test
-	public void testSteineAnKorrektPlatziert() {
-		fail("Not yet implemented");
-	}
+	
 
 }
