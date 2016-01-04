@@ -214,6 +214,7 @@ public class Spieler {
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege;
 		LinkedList<LinkedList<Koordinate>> alleSchlagpflichtWege;
 		LinkedList<Koordinate> zugWeg = null;	
+		boolean convertStone = false;
 		boolean rundeGueltig = true;
 		boolean schlagpflichtBeachtet = false;
 		int indexBuf;
@@ -256,13 +257,13 @@ public class Spieler {
 			if (zugWeg == null) {
 				rundeGueltig = false;
 			} else {
-				// Gehe den gesamten Weg ab
+				// Suche den gesamten Weg ab
 				for (int i = 1; i < zugWeg.size(); i ++) {
 					bufStein = new Stone(gegner.getFarbe(), zugWeg.get(i));
 					
-					//Ersetze Stein mit Lady falls nötig
+					//Prüfe, ob Stein am Ende des Zugs mit Lady ersetzt werden soll
 					if(ueberpruefeObSteinZuDame(new Stone(this.getFarbe(), zugWeg.get(i)))){
-						stoneToLady(zugWeg.get(i));
+						convertStone = true;
 					}
 					
 					// Wenn die aktuelle Koordinate einen Gegner beinhaltet, entferne ihn
@@ -290,6 +291,10 @@ public class Spieler {
 				}else{
 					// Ziehe den eigenen Stein an die Zielposition
 					this.getStones().get(indexBuf).ziehen(bewegung.getZiel());
+					
+					if(convertStone){
+						stoneToLady(bewegung.getZiel());
+					}
 				}
 			}
 		}else{
@@ -438,70 +443,76 @@ public class Spieler {
 		// Wenn kein Stein auf der aktuellen Koordinate ist, ist Gegner
 		// schlagbar
 		if (!(this.getStones().contains(bufEigeneStone) || gegner.getStones().contains(bufGegnerStone))) {
+			//Wenn die aktuelle Koordinate im Spielfeld liegt
 			if (koordinatenEingabeCheck(aktKoord.toString() + aktKoord.toString())) {
 				legalerWeg.add(aktKoord);
 				alleLegalenWege.add(legalerWeg);
-			}
 
-			// Prüfe nun, ob von der aktuellen Position aus weitere Gegner
-			// schlagbar sind
-			neuKoord = new Koordinate(aktKoord.getZahl() - 1, (char) (aktKoord.getBuchstabe() - 1));
-			// Falls man nicht von links oben kam...
-			if (!legalerWeg.contains(neuKoord)) {
-				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
-				// ...und dort ein Gegner ist
-				if (gegner.getStones().contains(bufGegnerStone)) {
-					// Kopiere die Liste 'legalerWeg' und benutze Rekursion
-					legalerWegZweig = copy(legalerWeg);
-					legalerWegZweig.add(neuKoord);
-					neuKoord = new Koordinate(aktKoord.getZahl() - 2, (char) (aktKoord.getBuchstabe() - 2));
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
-							alleLegalenWege);
+				// Prüfe nun, ob von der aktuellen Position aus weitere Gegner
+				// schlagbar sind
+				neuKoord = new Koordinate(aktKoord.getZahl() - 1, 
+						(char) (aktKoord.getBuchstabe() - 1));
+				// Falls man nicht von links oben kam...
+				if (!legalerWeg.contains(neuKoord)) {
+					bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+					// ...und dort ein Gegner ist
+					if (gegner.getStones().contains(bufGegnerStone)) {
+						// Kopiere die Liste 'legalerWeg' und benutze Rekursion
+						legalerWegZweig = copy(legalerWeg);
+						legalerWegZweig.add(neuKoord);
+						neuKoord = new Koordinate(aktKoord.getZahl() - 2, 
+								(char) (aktKoord.getBuchstabe() - 2));
+						alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, 
+								legalerWegZweig, alleLegalenWege);
+					}
 				}
-			}
-
-			neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char) (aktKoord.getBuchstabe() + 1));
-			// Falls man nicht von rechts unten kam...
-			if (!legalerWeg.contains(neuKoord)) {
-				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
-				// ...und dort ein Gegner ist
-				if (gegner.getStones().contains(bufGegnerStone)) {
-					// Kopiere die Liste 'legalerWeg' und benutze Rekursion
-					legalerWegZweig = copy(legalerWeg);
-					legalerWegZweig.add(neuKoord);
-					neuKoord = new Koordinate(aktKoord.getZahl() + 2, (char) (aktKoord.getBuchstabe() + 2));
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
-							alleLegalenWege);
+	
+				neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char) (aktKoord.getBuchstabe() + 1));
+				// Falls man nicht von rechts unten kam...
+				if (!legalerWeg.contains(neuKoord)) {
+					bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+					// ...und dort ein Gegner ist
+					if (gegner.getStones().contains(bufGegnerStone)) {
+						// Kopiere die Liste 'legalerWeg' und benutze Rekursion
+						legalerWegZweig = copy(legalerWeg);
+						legalerWegZweig.add(neuKoord);
+						neuKoord = new Koordinate(aktKoord.getZahl() + 2, 
+								(char) (aktKoord.getBuchstabe() + 2));
+						alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
+								alleLegalenWege);
+					}
 				}
-			}
-
-			neuKoord = new Koordinate(aktKoord.getZahl() - 1, (char) (aktKoord.getBuchstabe() + 1));
-			// Falls man nicht von rechts oben kam...
-			if (!legalerWeg.contains(neuKoord)) {
-				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
-				// ...und dort ein Gegner ist
-				if (gegner.getStones().contains(bufGegnerStone)) {
-					// Kopiere die Liste 'legalerWeg' und benutze Rekursion
-					legalerWegZweig = copy(legalerWeg);
-					legalerWegZweig.add(neuKoord);
-					neuKoord = new Koordinate(aktKoord.getZahl() - 2, (char) (aktKoord.getBuchstabe() + 2));
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
-							alleLegalenWege);
+	
+				neuKoord = new Koordinate(aktKoord.getZahl() - 1, (char) (aktKoord.getBuchstabe() + 1));
+				// Falls man nicht von rechts oben kam...
+				if (!legalerWeg.contains(neuKoord)) {
+					bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+					// ...und dort ein Gegner ist
+					if (gegner.getStones().contains(bufGegnerStone)) {
+						// Kopiere die Liste 'legalerWeg' und benutze Rekursion
+						legalerWegZweig = copy(legalerWeg);
+						legalerWegZweig.add(neuKoord);
+						neuKoord = new Koordinate(aktKoord.getZahl() - 2, 
+								(char) (aktKoord.getBuchstabe() + 2));
+						alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
+								alleLegalenWege);
+					}
 				}
-			}
-
-			neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char) (aktKoord.getBuchstabe() - 1));
-			// Falls man nicht von links unten kam...
-			if (!legalerWeg.contains(neuKoord)) {
-				bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
-				// ...und dort ein Gegner ist
-				if (gegner.getStones().contains(bufGegnerStone)) {
-					// Kopiere die Liste 'legalerWeg' und benutze Rekursion
-					legalerWegZweig = copy(legalerWeg);
-					legalerWegZweig.add(neuKoord);
-					neuKoord = new Koordinate(aktKoord.getZahl() + 2, (char) (aktKoord.getBuchstabe() - 2));
-					alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
-							alleLegalenWege);
+	
+				neuKoord = new Koordinate(aktKoord.getZahl() + 1, (char) (aktKoord.getBuchstabe() - 1));
+				// Falls man nicht von links unten kam...
+				if (!legalerWeg.contains(neuKoord)) {
+					bufGegnerStone = new Stone(gegner.getFarbe(), neuKoord);
+					// ...und dort ein Gegner ist
+					if (gegner.getStones().contains(bufGegnerStone)) {
+						// Kopiere die Liste 'legalerWeg' und benutze Rekursion
+						legalerWegZweig = copy(legalerWeg);
+						legalerWegZweig.add(neuKoord);
+						neuKoord = new Koordinate(aktKoord.getZahl() + 2, 
+								(char) (aktKoord.getBuchstabe() - 2));
+						alleLegalenWege = pruefeObGegnerSchlagbar(gegner, neuKoord, legalerWegZweig,
+								alleLegalenWege);
+					}
 				}
 			}
 		}

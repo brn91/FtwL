@@ -38,7 +38,7 @@ public class Ki extends Spieler{
 			}
 		//Sonst wähle einen zufälligen Zug
 		}else if(alleLegalenWege.size() > 0){
-			r = rand.nextInt(this.getStones().size() - 1);
+			r = rand.nextInt(alleLegalenWege.size() - 1);
 			zugWeg = alleLegalenWege.get(r);
 		}
 		

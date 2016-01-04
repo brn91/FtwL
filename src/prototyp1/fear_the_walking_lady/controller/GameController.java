@@ -194,6 +194,7 @@ public class GameController {
 				} while ((!spielzugGueltig) && (System.currentTimeMillis() < zeitBuf));
 			//Wenn die KI dran ist
 			}else{
+				System.out.println("\n Die Ki macht ihren Zug:");
 				((Ki)spieler2).kiZug(spieler1);
 			}
 			// Wechsle den Spieler
