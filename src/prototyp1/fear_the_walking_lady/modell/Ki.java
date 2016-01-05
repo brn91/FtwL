@@ -20,7 +20,7 @@ public class Ki extends Spieler{
 		LinkedList<LinkedList<Koordinate>> alleLegalenWege = new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<LinkedList<Koordinate>> schlagliste = new LinkedList<LinkedList<Koordinate>>();
 		LinkedList<Koordinate> zugWeg = null;
-		Bewegungskoordinate bewegung;
+		Bewegungskoordinate bewegung = null;
 		Random rand = new Random();
 		int r;
 		
@@ -37,14 +37,18 @@ public class Ki extends Spieler{
 				}
 			}
 		//Sonst wähle einen zufälligen Zug
-		}else if(alleLegalenWege.size() > 0){
+		}else if(alleLegalenWege.size() > 1){
 			r = rand.nextInt(alleLegalenWege.size() - 1);
 			zugWeg = alleLegalenWege.get(r);
+		}else if(alleLegalenWege.size() == 1){
+			zugWeg = alleLegalenWege.get(0);
 		}
 		
 		//Mache den Zug
-		bewegung = new Bewegungskoordinate(zugWeg.getFirst(), zugWeg.getLast());
-		waehleSteinUndZiehe(bewegung, gegner);
+		if(zugWeg != null){
+			bewegung = new Bewegungskoordinate(zugWeg.getFirst(), zugWeg.getLast());
+			waehleSteinUndZiehe(bewegung, gegner);
+		}
 		
 		return bewegung.toString();
 	}
