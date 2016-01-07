@@ -3,10 +3,25 @@ package prototyp1.fear_the_walking_lady.modell;
 import java.util.LinkedList;
 import java.util.Random;
 
+
 public class Ki extends Spieler{
 
+	/**
+	 * Erstellt die KIsteine an die Startkoordinaten 
+	 * und weist ihm eine Farbe zu.
+	 * 
+	 * @param color Farbe der KI
+	 */
 	public Ki(spielerFarbe color){
 		super(color);
+	}
+	
+	//Testkonstruktor
+	//Erzeugt eine Ki mit den als Parameter angegebenen Steinen
+	//Wenn der Parameter zB der String A2b3C4 ist, werden Steine auf Koordinate A2, B3, C4 erstellt
+	//Achtung! Es findet keine Gültigkeitsprüfung statt!
+	public Ki(spielerFarbe color, String steinkoordinaten){
+		super(color, steinkoordinaten);
 	}
 	
 	/**

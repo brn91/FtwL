@@ -30,6 +30,15 @@ public class GameController {
 	}
 	
 	/**
+	 * Setzt den ersten Spieler. 
+	 * 
+	 * @param spieler Der erste Spieler
+	 */
+	public void setSpieler1(Spieler spieler){
+		this.spieler1 = spieler;
+	}
+	
+	/**
 	 * Gibt den zweiten Spieler zurück
 	 * 
 	 * @return spieler2 Der zweite Spieler
@@ -39,12 +48,30 @@ public class GameController {
 	}
 	
 	/**
+	 * Setzt den zweiten Spieler. 
+	 * 
+	 * @param spieler Der zweiten Spieler
+	 */
+	public void setSpieler2(Spieler spieler){
+		this.spieler2 = spieler;
+	}
+	
+	/**
 	 * Gibt den Verlierer zurück
 	 * 
 	 * @return verlierer Der Verlierer
 	 */
 	public Spieler getVerlierer(){
 		return this.verlierer;
+	}
+	
+	/**
+	 * Setzt den Verlierer
+	 * 
+	 * @param spieler Der Verlierer
+	 */
+	public void setVerlierer(Spieler spieler){
+		this.verlierer = spieler;
 	}
 	
 	/**
@@ -63,6 +90,24 @@ public class GameController {
 	 */
 	public void setPlayer1turn(boolean player1turn){
 		this.player1turn = player1turn;
+	}
+	
+	/**
+	 * Gibt das verwendete TextInterface des GameControllers zurück.
+	 * 
+	 * @return myTextinterface Das Interface
+	 */
+	public TextInterface getMyInterface(){
+		return this.myInterface;
+	}
+	
+	/**
+	 * Setzt das verwendete TextInterface
+	 * 
+	 * @param myInterface Das zu verwendende Interface
+	 */
+	public void setMyInterface(TextInterface myInterface){
+		this.myInterface = myInterface;
 	}
 
 	/**

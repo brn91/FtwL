@@ -63,7 +63,7 @@ public class GameMenue{
 							break;
 				case 1: 	feldausgabe();
 							System.out.println("Gebe die Koordinaten ein:");
-							System.out.println("(B1A2 steht zB für: Ziehe B1 auf B2)");
+							System.out.println("(B1A2 steht zB für: Ziehe B1 auf A2)");
 							rueckgabe = in.nextLine();
 							break;
 				case 2: 	if(GameController.activateCheats){
