@@ -698,6 +698,7 @@ public class FearTheWalkingLadyTest {
 		((Ki) theGame.getSpieler2()).kiZug(theGame.getSpieler1());
 		assertFalse(theGame.spielLaeuft());
 	}
+
 	@Test
 	public void testSpielVorbei2() {
 		theGame.setSpieler1(new Spieler(spielerFarbe.WEIß, "D3C6"));
@@ -708,8 +709,10 @@ public class FearTheWalkingLadyTest {
 		((Ki) theGame.getSpieler2()).kiZug(theGame.getSpieler1());
 		assertFalse(theGame.spielLaeuft());
 	}
+
 	@Test
 	public void testSpielVorbei3() {
+
 		theGame.setSpieler1(new Spieler(spielerFarbe.WEIß, "B3C6"));
 		theGame.setSpieler2(new Ki(spielerFarbe.SCHWARZ, "A2"));
 		theGame.getSpieler1().stoneToLady(new Koordinate(6, 'C'));
@@ -717,5 +720,58 @@ public class FearTheWalkingLadyTest {
 
 		((Ki) theGame.getSpieler2()).kiZug(theGame.getSpieler1());
 		assertFalse(theGame.spielLaeuft());
+	}
+
+	/**
+	 * Erzeugt Spieler und KI auf dem Spielfeld und schaut ob ein Zug korrekt
+	 * durchgeführt wird.
+	 */
+	@Test
+	public void testSpielerMachtFalschenZug1() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "A2"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("A1B3"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug2() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "A2"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("A2B1"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug3() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "A2"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("A2A1"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug4() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "A2"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("A2@3"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug5() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "B1"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("B1C0"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug6() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "E6"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("E6F7"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug7() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "A2"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("aaaa"));
+	}
+	@Test
+	public void testSpielerMachtFalschenZug8() {
+		theGame.setSpieler1(new Spieler(spielerFarbe.SCHWARZ, "D1"));
+		theGame.setSpieler2(new Ki(spielerFarbe.WEIß, "A6"));
+		assertFalse(theGame.ueberpruefeSpielzug("D1F3"));
 	}
 }
